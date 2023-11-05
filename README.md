@@ -1,5 +1,6 @@
 # SPP_SPLAT
 
+## Parser implementation (Tokenizer module)
 Building a Parser from scratch. Lecture [1/18]
 https://www.youtube.com/watch?v=4m7ubrdbWQU
 
@@ -9,6 +10,7 @@ https://www.youtube.com/watch?v=0ZDPvdp2uFk&t=420s
 Building a Parser from scratch. Lecture [3/18]
 https://www.youtube.com/watch?v=nexKgX2d7wU
 
+## Abstract Syntax Tree
 Essentials of Interpretation. Lecture [4/18] Eva programming language
 https://www.youtube.com/watch?v=6xdS3w1Sl70&list=PLmxKqAXPnb5KMregZs7_yaML7AAYubaiC&index=6
 
