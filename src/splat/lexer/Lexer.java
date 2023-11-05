@@ -28,7 +28,7 @@ public class Lexer {
 			tokenizer.init(this.lineNum, readLine);
 			Token token = tokenizer.getNextToken();
 			while (token != null) {
-//				System.out.println(token.getType() + ": " + token.getValue());
+				// System.out.println(token.getType() + ": " + token.getValue());
 				tokens.add(token);
 				token = tokenizer.getNextToken();
 			}

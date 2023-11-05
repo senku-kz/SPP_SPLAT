@@ -10,10 +10,84 @@ public class Tokenizer {
     private String string;
     private int cursor;
 
+    private final List<String[]> spec = new ArrayList<>();
+
     public void init(int lineNumber, String input) {
         this.lineNumber = lineNumber;
         this.string = input;
         this.cursor = 0;
+
+        // --------------------------------------
+        this.spec.add(new String[]{"^\\s+", null}); // Whitespace
+
+        this.spec.add(new String[]{"^\\/\\/.*", null}); // Single-line comments
+        this.spec.add(new String[]{"^\\/\\*[\\s\\S]*?\\*\\/", null}); // Multi-line comments
+        // --------------------------------------
+        // Symbols and delimiters:
+        this.spec.add(new String[]{"^;", ";"}); // Semicolon
+        this.spec.add(new String[]{"^\\{", "{"}); // LeftBrace
+        this.spec.add(new String[]{"^\\}", "}"}); // RightBrace
+        this.spec.add(new String[]{"^\\(", "("}); // LeftParen
+        this.spec.add(new String[]{"^\\)", ")"}); // RightParen
+        this.spec.add(new String[]{"^\\[", "["}); // LeftBracket
+        this.spec.add(new String[]{"^\\]", "]"}); // RightBracket
+        this.spec.add(new String[]{"^,", ","}); // Comma
+        this.spec.add(new String[]{"^\\.", "."}); // Dot
+
+        // Relational Operators
+        // <, >, <=, >=
+        this.spec.add(new String[]{"^[<>]=?", "RELATIONAL_OPERATOR"}); // Relational Operators
+        this.spec.add(new String[]{"^[=!]=", "EQUALITY_OPERATOR"}); // Equality Operators
+
+        // Logical Operators
+        // ||, &&, !
+        this.spec.add(new String[]{"^&&", "LOGICAL_AND"}); // Logical AND
+        this.spec.add(new String[]{"^\\|\\|", "LOGICAL_OR"}); // Logical OR
+        this.spec.add(new String[]{"^!", "LOGICAL_NOT"}); // Logical NOT
+
+        // --------------------------------------
+        // Keywords
+        this.spec.add(new String[]{"^\\blet\\b", "let"});
+        this.spec.add(new String[]{"^\\bif\\b", "if"});
+        this.spec.add(new String[]{"^\\belse\\b", "else"});
+        this.spec.add(new String[]{"^\\btrue\\b", "true"});
+        this.spec.add(new String[]{"^\\bfalse\\b", "false"});
+        this.spec.add(new String[]{"^\\bnull\\b", "null"});
+
+        // --------------------------------------
+        // OOP keywords
+        this.spec.add(new String[]{"^\\bclass\\b", "class"});
+        this.spec.add(new String[]{"^\\bthis\\b", "this"});
+        this.spec.add(new String[]{"^\\bextends\\b", "extends"});
+        this.spec.add(new String[]{"^\\bsuper\\b", "super"});
+        this.spec.add(new String[]{"^\\bnew\\b", "new"});
+
+        // --------------------------------------
+        // Iterators
+        this.spec.add(new String[]{"^\\bwhile\\b", "while"});
+        this.spec.add(new String[]{"^\\bdo\\b", "do"});
+        this.spec.add(new String[]{"^\\bfor\\b", "for"});
+        this.spec.add(new String[]{"^\\bdef\\b", "def"});
+        this.spec.add(new String[]{"^\\breturn\\b", "return"});
+
+        // --------------------------------------
+        // Assignment operators: :=, *=, /=, +=, -=
+        this.spec.add(new String[]{"^:=", "SIMPLE_ASSIGN"});
+        this.spec.add(new String[]{"^[*\\/+\\-]=?", "COMPLEX_ASSIGN"});
+
+        // --------------------------------------
+        // Math operators: +, -, *, /
+        this.spec.add(new String[]{"^[+\\-]", "ADDITIVE_OPERATOR"});
+        this.spec.add(new String[]{"^[*\\/]", "MULTIPLICATIVE_OPERATOR"});
+        this.spec.add(new String[]{"^[*\\%]", "MODULUS_OPERATOR"});
+
+        this.spec.add(new String[]{"^\\d+", "NUMBER"}); // Numbers
+        this.spec.add(new String[]{"^\"[^\"]*\"", "STRING"}); // Double-quoted String
+        this.spec.add(new String[]{"^'[^']*'", "STRING"}); // Single-quoted String
+        this.spec.add(new String[]{"^\\w+", "IDENTIFIER"}); // Identifier
+
+        this.spec.add(new String[]{"^:", "COLON"}); // Identifier
+
     }
 
     public boolean isEOF() {
@@ -31,52 +105,7 @@ public class Tokenizer {
 
         String remainingString = string.substring(cursor);
 
-        List<String[]> spec = new ArrayList<>();
-        spec.add(new String[]{"^\\s+", null}); // Whitespace
-        spec.add(new String[]{"^\\/\\/.*", null}); // Single-line comments
-        spec.add(new String[]{"^\\/\\*[\\s\\S]*?\\*\\/", null}); // Multi-line comments
-        spec.add(new String[]{"^;", ";"}); // Semicolon
-        spec.add(new String[]{"^\\{", "{"}); // LeftBrace
-        spec.add(new String[]{"^\\}", "}"}); // RightBrace
-        spec.add(new String[]{"^\\(", "("}); // LeftParen
-        spec.add(new String[]{"^\\)", ")"}); // RightParen
-        spec.add(new String[]{"^\\[", "["}); // LeftBracket
-        spec.add(new String[]{"^\\]", "]"}); // RightBracket
-        spec.add(new String[]{"^,", ","}); // Comma
-        spec.add(new String[]{"^\\.", "."}); // Dot
-        spec.add(new String[]{"^[<>]=?", "RELATIONAL_OPERATOR"}); // Relational Operators
-        spec.add(new String[]{"^[=!]=", "EQUALITY_OPERATOR"}); // Equality Operators
-        spec.add(new String[]{"^&&", "LOGICAL_AND"}); // Logical AND
-        spec.add(new String[]{"^\\|\\|", "LOGICAL_OR"}); // Logical OR
-        spec.add(new String[]{"^!", "LOGICAL_NOT"}); // Logical NOT
-        spec.add(new String[]{"^\\blet\\b", "let"}); // Keywords
-        spec.add(new String[]{"^\\bif\\b", "if"});
-        spec.add(new String[]{"^\\belse\\b", "else"});
-        spec.add(new String[]{"^\\btrue\\b", "true"});
-        spec.add(new String[]{"^\\bfalse\\b", "false"});
-        spec.add(new String[]{"^\\bnull\\b", "null"});
-        spec.add(new String[]{"^\\bclass\\b", "class"}); // OOP Keywords
-        spec.add(new String[]{"^\\bthis\\b", "this"});
-        spec.add(new String[]{"^\\bextends\\b", "extends"});
-        spec.add(new String[]{"^\\bsuper\\b", "super"});
-        spec.add(new String[]{"^\\bnew\\b", "new"});
-        spec.add(new String[]{"^\\bwhile\\b", "while"}); // Iterators
-        spec.add(new String[]{"^\\bdo\\b", "do"});
-        spec.add(new String[]{"^\\bfor\\b", "for"});
-        spec.add(new String[]{"^\\bdef\\b", "def"});
-        spec.add(new String[]{"^\\breturn\\b", "return"});
-        spec.add(new String[]{"^:=", "SIMPLE_ASSIGN"}); // Assignment operators
-        spec.add(new String[]{"^[*\\/+\\-]=?", "COMPLEX_ASSIGN"});
-        spec.add(new String[]{"^[+\\-]", "ADDITIVE_OPERATOR"}); // Math operators
-        spec.add(new String[]{"^[*\\/]","MULTIPLICATIVE_OPERATOR"});
-        spec.add(new String[]{"^[*\\%]","MODULUS_OPERATOR"});
-        spec.add(new String[]{"^\\d+", "NUMBER"}); // Numbers
-        spec.add(new String[]{"^\"[^\"]*\"", "STRING"}); // Double-quoted String
-        spec.add(new String[]{"^'[^']*'", "STRING"}); // Single-quoted String
-        spec.add(new String[]{"^\\w+", "IDENTIFIER"}); // Identifier
-        spec.add(new String[]{"^:", "COLON"}); // Identifier
-
-        for (String[] entry : spec) {
+        for (String[] entry : this.spec) {
             String regex = entry[0];
             String tokenType = entry[1];
             Pattern pattern = Pattern.compile(regex);
@@ -92,7 +121,6 @@ public class Tokenizer {
             }
         }
 
-//        throw new SyntaxError("Unexpected token: \"" + remainingString.charAt(0) + "\"");
         throw new LexException("Invalid character: " + "\"" + remainingString.charAt(0) + "\"", this.lineNumber, this.cursor);
     }
 }
