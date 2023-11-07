@@ -9,6 +9,7 @@ import splat.parser.elements.*;
 public class Parser {
 
 	private List<Token> tokens;
+	private Token lookahead;
 
 	public Parser(List<Token> tokens) {
 		this.tokens = tokens;
@@ -54,7 +55,7 @@ public class Parser {
 	 * @return true iff the value matches the expected string
 	 */
 	private boolean peekTwoAhead(String expected) {
-		return tokens.get(1).getValue().equals(expected);
+		return this.tokens.get(1).getValue().equals(expected);
 	}
 	
 	
@@ -93,8 +94,8 @@ public class Parser {
 		
 		List<Declaration> decls = new ArrayList<Declaration>();
 		
-		while (!peekNext("begin")) {
-			Declaration decl = parseDecl();
+		while (!this.peekNext("begin")) {
+			Declaration decl = this.parseDecl();
 			decls.add(decl);
 		}
 		
@@ -122,6 +123,7 @@ public class Parser {
 	 */
 	private FunctionDecl parseFuncDecl() throws ParseException {
 		// TODO Auto-generated method stub
+//		this.popTokenList();
 		return null;
 	}
 
@@ -130,6 +132,7 @@ public class Parser {
 	 */
 	private VariableDecl parseVarDecl() throws ParseException {
 		// TODO Auto-generated method stub
+//		this.popTokenList();
 		return null;
 	}
 	
@@ -138,9 +141,73 @@ public class Parser {
 	 */
 	private List<Statement> parseStmts() throws ParseException {
 		// TODO Auto-generated method stub
-		return null;
+		List<Statement> statementList = new ArrayList<>();
+		this.lookahead = this.tokens.get(0);
+		String stopLookAhead = "end";
+		while (this.lookahead != null && !this.lookahead.getType().equals(stopLookAhead)){
+			statementList.add(this.statement());
+//			this.peekNext(stopLookAhead);
+		}
+		return statementList;
 	}
 
 
+	/*Experimental block*/
+	private Statement statement(){
+//        return switch (this.lookahead.getType()) {
+//            case "{" -> BlockStatement();
+//            case ";" -> EmptyStatement();
+//            case ":" -> VariableStatement();
+//            case "if" -> IfStatement();
+//            // Add cases for other statement types here
+//            default -> ExpressionStatement();
+//        };
+		switch (this.lookahead.getType()) {
+			case "{":
+				return BlockStatement();
+			case ";":
+				return EmptyStatement();
+			case "let":
+				return VariableStatement();
+			case "if":
+				return IfStatement();
+			// Add cases for other statement types here
+			default:
+				return ExpressionStatement();
+		}
+	}
+
+	private Statement BlockStatement(){
+		return null;
+	}
+	private Statement EmptyStatement(){
+		return null;
+	}
+	private Statement VariableStatement(){
+		return null;
+	}
+	private Statement IfStatement(){
+		return null;
+	}
+	private Statement ExpressionStatement(){
+		return null;
+	}
+
+//	private Token popTokenList(){
+//		return this.tokens.remove(0);
+//	}
+
+	// Helper methods
+//	private void eat(String tokenType) {
+//		Token lookahead = this.tokens.get(0);
+//		if (lookahead == null) {
+//			throw new RuntimeException("Unexpected end of input, expected: " + tokenType);
+//		}
+//
+//		if (!lookahead.getType().equals(tokenType)) {
+//			throw new RuntimeException("Unexpected token: " + lookahead.getValue() + ", expected: " + tokenType);
+//		}
+//		this.popTokenList();
+//	}
 
 }

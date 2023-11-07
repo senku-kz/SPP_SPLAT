@@ -9,7 +9,6 @@ public class Tokenizer {
     private int lineNumber;
     private String string;
     private int cursor;
-
     private final List<String[]> spec = new ArrayList<>();
 
     public void init(int lineNumber, String input) {

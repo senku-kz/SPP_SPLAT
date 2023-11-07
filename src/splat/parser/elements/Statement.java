@@ -3,10 +3,11 @@ package splat.parser.elements;
 import splat.lexer.Token;
 
 public abstract class Statement extends ASTElement {
-
 	public Statement(Token tok) {
 		super(tok);
 	}
+
+
 
 	/**
 	 * This will be needed for Phase 3 - this abstract method will need to be

@@ -25,7 +25,7 @@ public class Splat {
 		
 		// Step 2.  Parse
 		 Parser parser = new Parser(tokens);
-//		 ProgramAST progAST = parser.parse();
+		 ProgramAST progAST = parser.parse();
 		
 		// Step 3.  Semantic Analysis
 		// SemanticAnalyzer analyzer = new SemanticAnalyzer(progAST);
