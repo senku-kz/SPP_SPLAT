@@ -42,7 +42,7 @@ public class Tokenizer {
         // ||, &&, !
         this.spec.add(new String[]{"^&&", "LOGICAL_AND"}); // Logical AND
         this.spec.add(new String[]{"^\\|\\|", "LOGICAL_OR"}); // Logical OR
-        this.spec.add(new String[]{"^!", "LOGICAL_NOT"}); // Logical NOT
+//        this.spec.add(new String[]{"^!", "LOGICAL_NOT"}); // Logical NOT
 
         // --------------------------------------
         // Keywords
