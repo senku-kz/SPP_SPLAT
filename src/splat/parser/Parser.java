@@ -5,13 +5,9 @@ import java.util.List;
 
 import splat.lexer.Token;
 import splat.parser.elements.*;
-import splat.parser.expressions.AddNode;
 import splat.parser.expressions.ArithmeticOperators;
 import splat.parser.expressions.BinaryExpression;
-import splat.parser.nodes.LabelNode;
-import splat.parser.nodes.MinusNode;
-import splat.parser.nodes.NumberNode;
-import splat.parser.nodes.PlusNode;
+import splat.parser.nodes.*;
 import splat.parser.statements.StatementExpression;
 
 public class Parser {
@@ -22,7 +18,7 @@ public class Parser {
 
 	public Parser(List<Token> tokens) {
 		this.tokens = tokens;
-
+		this.currentToken = this.tokens.get(0);
 	}
 
 	/**
@@ -37,6 +33,9 @@ public class Parser {
 	private void checkNext(String expected) throws ParseException {
 
 		Token tok = tokens.remove(0);
+		if (!this.tokens.isEmpty()) {
+			this.currentToken = this.tokens.get(0);
+		}
 
 		if (!tok.getValue().equals(expected)) {
 			throw new ParseException("Expected '" + expected + "', got '"
@@ -125,8 +124,8 @@ public class Parser {
 		} else if (peekTwoAhead("(")) {
 			return parseFuncDecl();
 		} else {
-			Token tok = tokens.get(0);
-			throw new ParseException("Declaration expected", tok);
+			Token token = tokens.get(0);
+			throw new ParseException("Declaration expected", token);
 		}
 	}
 
@@ -136,6 +135,45 @@ public class Parser {
 	 */
 	private FunctionDecl parseFuncDecl() throws ParseException {
 		// TODO Auto-generated method stub
+		if ("IDENTIFIER".equals(this.currentToken.getType()) && this.peekTwoAhead("(")){
+			Token functionName = this.currentToken;
+			this.eat();
+			this.checkNext("(");
+
+			List<Declaration> decls = new ArrayList<Declaration>();
+
+			while (!peekNext(")")) {
+				Token token = this.currentToken;
+				this.eat();
+				this.checkNext(":");
+				VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), this.currentToken.getValue());
+				this.eat();
+				decls.add(var);
+			}
+
+
+			this.checkNext(")");
+			this.checkNext(":");
+
+			Token functionType = this.currentToken;
+			this.eat();
+			this.checkNext("is");
+			this.checkNext("begin");
+
+			List<Statement> statements = this.parseStmts();
+
+			checkNext("end");
+			checkNext(";");
+
+			FunctionDecl functionDecl = new FunctionDecl(
+					functionName,
+					functionName.getValue(),
+					functionType.getValue(),
+					decls,
+					statements
+			);
+			return functionDecl;
+		}
 		return null;
 	}
 
@@ -144,22 +182,27 @@ public class Parser {
 	 */
 	private VariableDecl parseVarDecl() throws ParseException {
 		// TODO Auto-generated method stub
+		if ("IDENTIFIER".equals(this.currentToken.getType()) && this.peekTwoAhead(":")){
+			Token token = this.currentToken;
+			this.eat();
+			this.checkNext(":");
+			VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), this.currentToken.getValue());
+			this.eat();
+			this.checkNext(";");
+			return var;
+		}
 		return null;
 	}
 
 	/*
 	 * <stmts> ::= (  <stmt>  )*
 	 */
-	private List<Statement> parseStmts() throws Exception {
+	private List<Statement> parseStmts() throws ParseException {
 		// TODO Auto-generated method stub
-
 		List<Statement> stmts = new ArrayList<Statement>();
 
 		while (!peekNext("end")) {
 			Statement statement = this.statement();
-//			throw new ParseException("Unexpectedly reached the end of file.", -1, -1);
-//			System.out.println(stmt);
-
 			stmts.add(statement);
 		}
 
@@ -171,12 +214,11 @@ public class Parser {
 		this.currentToken = tokens.get(0);
 	}
 
-	private Statement statement() throws Exception {
-		this.currentToken = this.tokens.get(0);
+	private Statement statement() throws ParseException {
 		if (peekTwoAhead(":=")) {
 			ASTElement statement_label = new LabelNode(currentToken);
 			this.eat();
-			this.eat();
+			this.checkNext(":=");
 			ASTElement expression = this.expression();
 			this.checkNext(";");
 
@@ -205,10 +247,10 @@ public class Parser {
 		ASTElement result = this.factor();
 		while (!this.peekNext(";") && "MULTIPLICATIVE_OPERATOR".equals(this.currentToken.getType())){
 			if ("*".equals(this.currentToken.getValue())) {
-				this.eat();
+				this.checkNext("*");
 				result = new BinaryExpression(ArithmeticOperators.Multiplication, result, this.factor());
 			} else if ("/".equals(this.currentToken.getValue())) {
-				this.eat();
+				this.checkNext("/");
 				result = new BinaryExpression(ArithmeticOperators.Division, result, this.factor());
 			}
 		}
@@ -219,24 +261,24 @@ public class Parser {
 	private ASTElement factor() throws ParseException {
 		Token token = this.currentToken;
 		if ("LeftParen".equals(this.currentToken.getType())) {
-			this.eat();
+			this.checkNext("(");
 			ASTElement expression = this.expression();
-			if (this.peekNext(")")){
-				this.eat();
-			}
+			this.checkNext(")");
 			return expression;
-
 		} else if ("NUMBER".equals(this.currentToken.getType())) {
 			this.eat();
 			return new NumberNode(token);
-		} else if ("+".equals(this.currentToken.getValue())) {
+		} else if ("IDENTIFIER".equals(this.currentToken.getType())){
 			this.eat();
+			return new VariableNode(token);
+		} else if ("+".equals(this.currentToken.getValue())) {
+			this.checkNext("+");
 			return new PlusNode(this.factor());
 		} else if ("-".equals(this.currentToken.getValue())) {
-			this.eat();
+			this.checkNext("-");
 			return new MinusNode(this.factor());
 		}
-		throw new ParseException("Unexpectedly reached the end of file.", this.currentToken.getLine(), this.currentToken.getColumn());
+		throw new ParseException("Unexpectedly factor in expression.", this.currentToken.getLine(), this.currentToken.getColumn());
 
 	}
 

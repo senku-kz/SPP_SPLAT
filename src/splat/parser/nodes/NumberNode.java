@@ -10,5 +10,4 @@ public class NumberNode extends ASTElement {
         super(token);
         this.value = Float.parseFloat(token.getValue());
     }
-
 }
