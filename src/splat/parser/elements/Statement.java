@@ -3,8 +3,8 @@ package splat.parser.elements;
 import splat.lexer.Token;
 
 public abstract class Statement extends ASTElement {
-	public Statement(Token tok) {
-		super(tok);
+	public Statement(Token token) {
+		super(token);
 	}
 
 

@@ -26,8 +26,8 @@ public class Tokenizer {
         this.spec.add(new String[]{"^;", ";"}); // Semicolon
         this.spec.add(new String[]{"^\\{", "{"}); // LeftBrace
         this.spec.add(new String[]{"^\\}", "}"}); // RightBrace
-        this.spec.add(new String[]{"^\\(", "("}); // LeftParen
-        this.spec.add(new String[]{"^\\)", ")"}); // RightParen
+        this.spec.add(new String[]{"^\\(", "LeftParen"}); // LeftParen
+        this.spec.add(new String[]{"^\\)", "RightParen"}); // RightParen
         this.spec.add(new String[]{"^\\[", "["}); // LeftBracket
         this.spec.add(new String[]{"^\\]", "]"}); // RightBracket
         this.spec.add(new String[]{"^,", ","}); // Comma
@@ -70,15 +70,15 @@ public class Tokenizer {
         this.spec.add(new String[]{"^\\breturn\\b", "return"});
 
         // --------------------------------------
-        // Assignment operators: :=, *=, /=, +=, -=
-        this.spec.add(new String[]{"^:=", "SIMPLE_ASSIGN"});
-        this.spec.add(new String[]{"^[*\\/+\\-]=?", "COMPLEX_ASSIGN"});
-
-        // --------------------------------------
         // Math operators: +, -, *, /
         this.spec.add(new String[]{"^[+\\-]", "ADDITIVE_OPERATOR"});
         this.spec.add(new String[]{"^[*\\/]", "MULTIPLICATIVE_OPERATOR"});
         this.spec.add(new String[]{"^[*\\%]", "MODULUS_OPERATOR"});
+
+        // --------------------------------------
+        // Assignment operators: :=, *=, /=, +=, -=
+        this.spec.add(new String[]{"^:=", "SIMPLE_ASSIGN"});
+        this.spec.add(new String[]{"^[*\\/+\\-]=?", "COMPLEX_ASSIGN"});
 
         this.spec.add(new String[]{"^\\d+", "NUMBER"}); // Numbers
         this.spec.add(new String[]{"^\"[^\"]*\"", "STRING"}); // Double-quoted String

@@ -4,8 +4,8 @@ import splat.lexer.Token;
 
 public abstract class Expression extends ASTElement {
 
-	public Expression(Token tok) {
-		super(tok);
+	public Expression(Token token) {
+		super(token);
 	}
 
 	/**

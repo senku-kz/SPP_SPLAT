@@ -1,13 +1,12 @@
 package splat.parser.nodes;
 
-public class MinusNode {
-    private float node;
+import splat.lexer.Token;
+import splat.parser.elements.ASTElement;
 
-    public float getNode() {
-        return node;
-    }
-
-    public void setNode(float node) {
-        this.node = node;
+public class MinusNode extends ASTElement{
+    ASTElement number;
+    public MinusNode(ASTElement number) {
+        super(new Token("Negative Number", "", number.getLine(), number.getColumn()));
+        this.number = number;
     }
 }

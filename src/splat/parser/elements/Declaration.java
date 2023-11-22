@@ -4,7 +4,7 @@ import splat.lexer.Token;
 
 public abstract class Declaration extends ASTElement {
 
-	public Declaration(Token tok) {
-		super(tok);
+	public Declaration(Token token) {
+		super(token);
 	}
 }

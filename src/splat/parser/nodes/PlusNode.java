@@ -1,13 +1,13 @@
 package splat.parser.nodes;
 
-public class PlusNode {
-    private float node;
+import splat.lexer.Token;
+import splat.parser.elements.ASTElement;
 
-    public float getNode() {
-        return node;
+public class PlusNode extends ASTElement {
+    ASTElement number;
+    public PlusNode(ASTElement number) {
+        super(new Token("Positive Number", "", number.getLine(), number.getColumn()));
+        this.number = number;
     }
 
-    public void setNode(float node) {
-        this.node = node;
-    }
 }

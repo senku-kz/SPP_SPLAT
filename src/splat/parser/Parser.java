@@ -5,13 +5,24 @@ import java.util.List;
 
 import splat.lexer.Token;
 import splat.parser.elements.*;
+import splat.parser.expressions.AddNode;
+import splat.parser.expressions.ArithmeticOperators;
+import splat.parser.expressions.BinaryExpression;
+import splat.parser.nodes.LabelNode;
+import splat.parser.nodes.MinusNode;
+import splat.parser.nodes.NumberNode;
+import splat.parser.nodes.PlusNode;
+import splat.parser.statements.StatementExpression;
 
 public class Parser {
 
-	private List<Token> tokens;
+	private final List<Token> tokens;
+
+	private Token currentToken;
 
 	public Parser(List<Token> tokens) {
 		this.tokens = tokens;
+
 	}
 
 	/**
@@ -84,8 +95,10 @@ public class Parser {
 		} catch (IndexOutOfBoundsException ex) {
 
 			throw new ParseException("Unexpectedly reached the end of file.", -1, -1);
-		}
-	}
+		} catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	/*
 	 *  <decls> ::= (  <decl>  )*
@@ -137,20 +150,95 @@ public class Parser {
 	/*
 	 * <stmts> ::= (  <stmt>  )*
 	 */
-	private List<Statement> parseStmts() throws ParseException {
+	private List<Statement> parseStmts() throws Exception {
 		// TODO Auto-generated method stub
 
 		List<Statement> stmts = new ArrayList<Statement>();
 
-		while (!peekNext("begin")) {
-			Statement stmt = this.expression();
-			stmts.add(stmt);
+		while (!peekNext("end")) {
+			Statement statement = this.statement();
+//			throw new ParseException("Unexpectedly reached the end of file.", -1, -1);
+//			System.out.println(stmt);
+
+			stmts.add(statement);
 		}
 
 		return stmts;
 	}
 
-	private Statement expression(){
-		return null;
+	private void eat() {
+		this.tokens.remove(0);
+		this.currentToken = tokens.get(0);
 	}
+
+	private Statement statement() throws Exception {
+		this.currentToken = this.tokens.get(0);
+		if (peekTwoAhead(":=")) {
+			ASTElement statement_label = new LabelNode(currentToken);
+			this.eat();
+			this.eat();
+			ASTElement expression = this.expression();
+			this.checkNext(";");
+
+			StatementExpression statementExpression = new StatementExpression(statement_label, expression);
+			return statementExpression;
+		}
+		throw new ParseException("Unexpectedly reached the end of file.", this.currentToken.getLine(), this.currentToken.getColumn());
+	}
+
+	private ASTElement expression() throws ParseException {
+		ASTElement result = this.term();
+
+		while (!this.peekNext(";") && "ADDITIVE_OPERATOR".equals(this.currentToken.getType())){
+			if ("+".equals(this.currentToken.getValue())) {
+				this.eat();
+				result = new BinaryExpression(ArithmeticOperators.Addition, result, this.term());
+			} else if ("-".equals(this.currentToken.getValue())) {
+				this.eat();
+				result = new BinaryExpression(ArithmeticOperators.Subtraction, result, this.term());
+			}
+		}
+		return result;
+	}
+
+	private ASTElement term() throws ParseException {
+		ASTElement result = this.factor();
+		while (!this.peekNext(";") && "MULTIPLICATIVE_OPERATOR".equals(this.currentToken.getType())){
+			if ("*".equals(this.currentToken.getValue())) {
+				this.eat();
+				result = new BinaryExpression(ArithmeticOperators.Multiplication, result, this.factor());
+			} else if ("/".equals(this.currentToken.getValue())) {
+				this.eat();
+				result = new BinaryExpression(ArithmeticOperators.Division, result, this.factor());
+			}
+		}
+		return result;
+	}
+
+
+	private ASTElement factor() throws ParseException {
+		Token token = this.currentToken;
+		if ("LeftParen".equals(this.currentToken.getType())) {
+			this.eat();
+			ASTElement expression = this.expression();
+			if (this.peekNext(")")){
+				this.eat();
+			}
+			return expression;
+
+		} else if ("NUMBER".equals(this.currentToken.getType())) {
+			this.eat();
+			return new NumberNode(token);
+		} else if ("+".equals(this.currentToken.getValue())) {
+			this.eat();
+			return new PlusNode(this.factor());
+		} else if ("-".equals(this.currentToken.getValue())) {
+			this.eat();
+			return new MinusNode(this.factor());
+		}
+		throw new ParseException("Unexpectedly reached the end of file.", this.currentToken.getLine(), this.currentToken.getColumn());
+
+	}
+
+
 }

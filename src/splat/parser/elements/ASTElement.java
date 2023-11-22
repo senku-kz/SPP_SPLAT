@@ -6,9 +6,9 @@ public abstract class ASTElement {
 	private int line;
 	private int column;
 
-	public ASTElement(Token tok) {
-		this.line = tok.getLine();
-		this.column = tok.getColumn();
+	public ASTElement(Token token) {
+		this.line = token.getLine();
+		this.column = token.getColumn();
 	}
 
 	public int getLine() {

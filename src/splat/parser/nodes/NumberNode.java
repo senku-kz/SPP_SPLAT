@@ -1,14 +1,14 @@
 package splat.parser.nodes;
 
-public class NumberNode {
-    private float value;
+import splat.lexer.Token;
+import splat.parser.elements.ASTElement;
 
-    public float getValue() {
-        return value;
-    }
+public class NumberNode extends ASTElement {
+    protected float value;
 
-    public void setValue(float value) {
-        this.value = value;
+    public NumberNode(Token token) {
+        super(token);
+        this.value = Float.parseFloat(token.getValue());
     }
 
 }
