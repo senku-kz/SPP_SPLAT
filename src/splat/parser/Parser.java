@@ -104,7 +104,7 @@ public class Parser {
 	 */
 	private List<Declaration> parseDecls() throws ParseException {
 
-		List<Declaration> decls = new ArrayList<Declaration>();
+		List<Declaration> decls = new ArrayList<>();
 
 		while (!peekNext("begin")) {
 			Declaration decl = parseDecl();
@@ -140,7 +140,7 @@ public class Parser {
 			this.eat();
 			this.checkNext("(");
 
-			List<Declaration> decls = new ArrayList<Declaration>();
+			List<Declaration> decls = new ArrayList<>();
 
 			while (!peekNext(")")) {
 				Token token = this.currentToken;
@@ -165,14 +165,13 @@ public class Parser {
 			checkNext("end");
 			checkNext(";");
 
-			FunctionDecl functionDecl = new FunctionDecl(
+            return new FunctionDecl(
 					functionName,
 					functionName.getValue(),
 					functionType.getValue(),
 					decls,
 					statements
 			);
-			return functionDecl;
 		}
 		return null;
 	}
@@ -199,7 +198,7 @@ public class Parser {
 	 */
 	private List<Statement> parseStmts() throws ParseException {
 		// TODO Auto-generated method stub
-		List<Statement> stmts = new ArrayList<Statement>();
+		List<Statement> stmts = new ArrayList<>();
 
 		while (!peekNext("end")) {
 			Statement statement = this.statement();
@@ -222,8 +221,7 @@ public class Parser {
 			ASTElement expression = this.expression();
 			this.checkNext(";");
 
-			StatementExpression statementExpression = new StatementExpression(statement_label, expression);
-			return statementExpression;
+            return new StatementExpression(statement_label, expression);
 		}
 		throw new ParseException("Unexpectedly reached the end of file.", this.currentToken.getLine(), this.currentToken.getColumn());
 	}
