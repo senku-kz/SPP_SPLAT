@@ -4,7 +4,7 @@ import splat.lexer.Token;
 import splat.parser.elements.Statement;
 
 public class StatementReturn extends Statement {
-    public StatementReturn(Token tok) {
-        super(tok);
+    public StatementReturn(Token token) {
+        super(token);
     }
 }

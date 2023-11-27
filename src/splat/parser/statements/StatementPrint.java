@@ -4,7 +4,9 @@ import splat.lexer.Token;
 import splat.parser.elements.Statement;
 
 public class StatementPrint extends Statement {
-    public StatementPrint(Token tok) {
-        super(tok);
+    private String value;
+    public StatementPrint(Token token, String value) {
+        super(token);
+        this.value = value;
     }
 }

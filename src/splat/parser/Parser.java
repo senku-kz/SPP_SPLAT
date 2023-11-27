@@ -8,7 +8,7 @@ import splat.parser.elements.*;
 import splat.parser.expressions.ArithmeticOperators;
 import splat.parser.expressions.BinaryExpression;
 import splat.parser.nodes.*;
-import splat.parser.statements.StatementExpression;
+import splat.parser.statements.*;
 
 public class Parser {
 
@@ -92,10 +92,7 @@ public class Parser {
 
 			// This might happen if we do a tokens.get(), and nothing is there!
 		} catch (IndexOutOfBoundsException ex) {
-
 			throw new ParseException("Unexpectedly reached the end of file.", -1, -1);
-		} catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -149,8 +146,10 @@ public class Parser {
 				VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), this.currentToken.getValue());
 				this.eat();
 				decls.add(var);
+				if (this.peekNext(",")){
+					this.checkNext(",");
+				}
 			}
-
 
 			this.checkNext(")");
 			this.checkNext(":");
@@ -158,6 +157,14 @@ public class Parser {
 			Token functionType = this.currentToken;
 			this.eat();
 			this.checkNext("is");
+
+
+			while (!peekNext("begin")) {
+				Declaration decl = parseDecl();
+				decls.add(decl);
+			}
+
+
 			this.checkNext("begin");
 
 			List<Statement> statements = this.parseStmts();
@@ -190,7 +197,7 @@ public class Parser {
 			this.checkNext(";");
 			return var;
 		}
-		return null;
+		throw new ParseException("Unexpected variable declaration.", this.currentToken.getLine(), this.currentToken.getColumn());
 	}
 
 	/*
@@ -215,27 +222,96 @@ public class Parser {
 
 	private Statement statement() throws ParseException {
 		if (peekTwoAhead(":=")) {
-			ASTElement statement_label = new LabelNode(currentToken);
+			ASTElement statement_label = new LabelNode(this.currentToken);
 			this.eat();
 			this.checkNext(":=");
 			ASTElement expression = this.expression();
 			this.checkNext(";");
-
             return new StatementExpression(statement_label, expression);
+		} else if (this.peekNext("return")) {
+			this.eat();
+			if (this.peekNext(";")) {
+				Statement statementReturn = new StatementReturn(this.currentToken);
+				this.checkNext(";");
+				return statementReturn;
+			} else if (this.peekTwoAhead(";")) {
+				ASTElement value = null;
+				if ("NUMBER".equals(this.currentToken.getType())) {
+					value = new NumberNode(this.currentToken);
+				} else if ("IDENTIFIER".equals(this.currentToken.getType())) {
+					value = new VariableNode(this.currentToken);
+				}
+				Statement statementReturnValue = new StatementReturnValue(this.currentToken, value);
+				this.eat();
+				this.checkNext(";");
+				return statementReturnValue;
+			} else if (this.peekNext("(")){
+				ASTElement expression = this.expression();
+				Statement statementReturnValue = new StatementReturnValue(this.currentToken, expression);
+				this.eat();
+				this.checkNext(";");
+				return statementReturnValue;
+			}
+		} else if (this.peekNext("print")) {
+			this.eat();
+			Statement statementPrint = new StatementPrint(this.currentToken, this.currentToken.getValue());
+			this.eat();
+			this.checkNext(";");
+			return statementPrint;
+		} else if (this.peekNext("while")) {
+			StatementWhile whileDo = new StatementWhile(this.currentToken);
+			this.eat();
+
+			ASTElement statementExpression = this.expression();
+			whileDo.setExpression(statementExpression);
+
+			this.checkNext("do");
+
+			List<Statement> stmts = new ArrayList<>();
+			while (!peekNext("end") && !peekTwoAhead("while")) {
+				Statement statement = this.statement();
+				stmts.add(statement);
+			}
+			this.checkNext("end");
+			this.checkNext("while");
+			this.checkNext(";");
+			whileDo.setStatement(stmts);
+
+			return whileDo;
 		}
-		throw new ParseException("Unexpectedly reached the end of file.", this.currentToken.getLine(), this.currentToken.getColumn());
+		throw new ParseException("Unexpected statement.", this.currentToken.getLine(), this.currentToken.getColumn());
 	}
 
 	private ASTElement expression() throws ParseException {
 		ASTElement result = this.term();
 
-		while (!this.peekNext(";") && "ADDITIVE_OPERATOR".equals(this.currentToken.getType())){
-			if ("+".equals(this.currentToken.getValue())) {
-				this.eat();
-				result = new BinaryExpression(ArithmeticOperators.Addition, result, this.term());
-			} else if ("-".equals(this.currentToken.getValue())) {
-				this.eat();
-				result = new BinaryExpression(ArithmeticOperators.Subtraction, result, this.term());
+//		while (!this.peekNext(";") && "ADDITIVE_OPERATOR".equals(this.currentToken.getType())){
+		while (!this.peekNext(";")){
+			if ("ADDITIVE_OPERATOR".equals(this.currentToken.getType())){
+				if ("+".equals(this.currentToken.getValue())) {
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.Addition, result, this.term());
+				} else if ("-".equals(this.currentToken.getValue())) {
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.Subtraction, result, this.term());
+				}
+			} else if ("RELATIONAL_OPERATOR".equals(this.currentToken.getType())) {
+				if ("<".equals(this.currentToken.getValue())){
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.LessThan, result, this.term());
+				} else if (">".equals(this.currentToken.getValue())) {
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.GreaterThan, result, this.term());
+				} else if ("<=".equals(this.currentToken.getValue())) {
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.LessThanOrEqualTo, result, this.term());
+				} else if (">=".equals(this.currentToken.getValue())) {
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.GreaterThanOrEqualTo, result, this.term());
+				}
+
+			} else {
+				break;
 			}
 		}
 		return result;
@@ -276,8 +352,11 @@ public class Parser {
 			this.checkNext("-");
 			return new MinusNode(this.factor());
 		}
-		throw new ParseException("Unexpectedly factor in expression.", this.currentToken.getLine(), this.currentToken.getColumn());
+		throw new ParseException("Unexpected factor in expression.", this.currentToken.getLine(), this.currentToken.getColumn());
+	}
 
+	private ASTElement whileDo(){
+		return null;
 	}
 
 

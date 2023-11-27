@@ -7,5 +7,10 @@ public enum ArithmeticOperators {
     Division,
     Modulus,
     Exponentiation,
-    FloorDivision
+    FloorDivision,
+
+    LessThan,
+    GreaterThan,
+    LessThanOrEqualTo,
+    GreaterThanOrEqualTo,
 }

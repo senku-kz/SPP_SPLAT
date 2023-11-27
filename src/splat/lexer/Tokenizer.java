@@ -49,8 +49,8 @@ public class Tokenizer {
         this.spec.add(new String[]{"^\\blet\\b", "let"});
         this.spec.add(new String[]{"^\\bif\\b", "if"});
         this.spec.add(new String[]{"^\\belse\\b", "else"});
-        this.spec.add(new String[]{"^\\btrue\\b", "true"});
-        this.spec.add(new String[]{"^\\bfalse\\b", "false"});
+//        this.spec.add(new String[]{"^\\btrue\\b", "true"});
+//        this.spec.add(new String[]{"^\\bfalse\\b", "false"});
         this.spec.add(new String[]{"^\\bnull\\b", "null"});
 
         // --------------------------------------
