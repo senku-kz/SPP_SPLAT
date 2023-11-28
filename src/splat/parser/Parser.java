@@ -221,13 +221,17 @@ public class Parser {
 	}
 
 	private Statement statement() throws ParseException {
-		if (peekTwoAhead(":=")) {
+		if ("IDENTIFIER".equals(this.currentToken.getType()) && peekTwoAhead(":=")) {
 			ASTElement statement_label = new LabelNode(this.currentToken);
 			this.eat();
 			this.checkNext(":=");
-			ASTElement expression = this.expression();
-			this.checkNext(";");
-            return new StatementExpression(statement_label, expression);
+			if (peekTwoAhead("(")){
+				return new StatementExpression(statement_label, this.functionCall());
+			} else {
+				ASTElement expression = this.expression();
+				this.checkNext(";");
+				return new StatementExpression(statement_label, expression);
+			}
 		} else if (this.peekNext("return")) {
 			this.eat();
 			if (this.peekNext(";")) {
@@ -254,8 +258,19 @@ public class Parser {
 			}
 		} else if (this.peekNext("print")) {
 			this.eat();
+			Statement statementPrint;
+
+			if ("IDENTIFIER".equals(this.currentToken.getType()) && peekTwoAhead("(")){
+				statementPrint = this.functionCall();
+			} else {
+				statementPrint = new StatementPrint(this.currentToken, this.currentToken.getValue());
+				this.eat();
+				this.checkNext(";");
+			}
+			return statementPrint;
+		} else if (this.peekNext("print_line")) {
 			Statement statementPrint = new StatementPrint(this.currentToken, this.currentToken.getValue());
-			this.eat();
+			this.checkNext("print_line");
 			this.checkNext(";");
 			return statementPrint;
 		} else if (this.peekNext("while")) {
@@ -278,16 +293,50 @@ public class Parser {
 			whileDo.setStatement(stmts);
 
 			return whileDo;
+		} else if (this.peekNext("if")) {
+			StatementIfElse statementIfElse = new StatementIfElse(this.currentToken);
+			this.eat();
+			this.checkNext("(");
+
+			ASTElement statementExpression = this.expression();
+			statementIfElse.setExpression(statementExpression);
+			this.checkNext(")");
+
+			this.checkNext("then");
+
+			List<Statement> stmtsThan = new ArrayList<>();
+			while (!peekNext("end") && !peekTwoAhead("if") && !peekNext("else")) {
+				Statement statementThan = this.statement();
+				stmtsThan.add(statementThan);
+			}
+
+			if ("else".equals(this.currentToken.getValue())){
+				this.checkNext("else");
+				List<Statement> stmtsElse = new ArrayList<>();
+				while (!peekNext("end") && !peekTwoAhead("if") ) {
+					Statement statementElse = this.statement();
+					stmtsElse.add(statementElse);
+				}
+				statementIfElse.setElseStatement(stmtsElse);
+			}
+			this.checkNext("end");
+			this.checkNext("if");
+			this.checkNext(";");
+			statementIfElse.setThanStatement(stmtsThan);
+
+			return statementIfElse;
+		} else if ("IDENTIFIER".equals(this.currentToken.getType()) && peekTwoAhead("(")) {
+			return this.functionCall();
 		}
 		throw new ParseException("Unexpected statement.", this.currentToken.getLine(), this.currentToken.getColumn());
 	}
 
 	private ASTElement expression() throws ParseException {
+//		ASTElement result = null;
 		ASTElement result = this.term();
-
-//		while (!this.peekNext(";") && "ADDITIVE_OPERATOR".equals(this.currentToken.getType())){
 		while (!this.peekNext(";")){
 			if ("ADDITIVE_OPERATOR".equals(this.currentToken.getType())){
+//				result = this.term();
 				if ("+".equals(this.currentToken.getValue())) {
 					this.eat();
 					result = new BinaryExpression(ArithmeticOperators.Addition, result, this.term());
@@ -296,6 +345,7 @@ public class Parser {
 					result = new BinaryExpression(ArithmeticOperators.Subtraction, result, this.term());
 				}
 			} else if ("RELATIONAL_OPERATOR".equals(this.currentToken.getType())) {
+//				result = this.term();
 				if ("<".equals(this.currentToken.getValue())){
 					this.eat();
 					result = new BinaryExpression(ArithmeticOperators.LessThan, result, this.term());
@@ -310,6 +360,31 @@ public class Parser {
 					result = new BinaryExpression(ArithmeticOperators.GreaterThanOrEqualTo, result, this.term());
 				}
 
+			} else if ("EQUALITY_OPERATOR".equals(this.currentToken.getType())) {
+//				result = this.term();
+				if ("==".equals(this.currentToken.getValue())){
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.EqualTo, result, this.term());
+				} else if ("!=".equals(this.currentToken.getValue())) {
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.NotEqualTo, result, this.term());
+				}
+			} else if ("LOGICAL_OPERATORS".equals(this.currentToken.getType())) {
+//				result = this.term();
+				if ("and".equals(this.currentToken.getValue())){
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.LogicalAnd, result, this.term());
+				} else if ("or".equals(this.currentToken.getValue())) {
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.LogicalOr, result, this.term());
+				}
+			} else if ("LeftParen".equals(this.currentToken.getType())) {
+				result = this.term();
+			} else if ("IDENTIFIER".equals(this.currentToken.getType())) {
+				result = new VariableNode(this.currentToken);
+				eat();
+			} else if ("STRING".equals(this.currentToken.getType())) {
+				result = new StringNode(this.currentToken);
 			} else {
 				break;
 			}
@@ -355,8 +430,27 @@ public class Parser {
 		throw new ParseException("Unexpected factor in expression.", this.currentToken.getLine(), this.currentToken.getColumn());
 	}
 
-	private ASTElement whileDo(){
-		return null;
+	private StatementFunctionCall functionCall() throws ParseException {
+		StatementFunctionCall procedureCall = new StatementFunctionCall(this.currentToken);
+		if ("IDENTIFIER".equals(this.currentToken.getType()) && peekTwoAhead("(")) {
+
+			LabelNode functionName = new LabelNode(this.currentToken);
+			procedureCall.setFunctionName(functionName);
+			this.eat();
+			this.checkNext("(");
+
+			while (!peekNext(")")) {
+				ArgumentNode argumentNode = new ArgumentNode(this.currentToken);
+				procedureCall.addArgument(argumentNode);
+				this.eat();
+				if (peekNext(",")) {
+					this.checkNext(",");
+				}
+			}
+			this.checkNext(")");
+			this.checkNext(";");
+		}
+		return procedureCall;
 	}
 
 

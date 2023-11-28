@@ -13,4 +13,8 @@ public enum ArithmeticOperators {
     GreaterThan,
     LessThanOrEqualTo,
     GreaterThanOrEqualTo,
+    EqualTo,
+    NotEqualTo,
+    LogicalAnd,
+    LogicalOr,
 }

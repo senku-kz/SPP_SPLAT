@@ -40,6 +40,8 @@ public class Tokenizer {
 
         // Logical Operators
         // ||, &&, !
+        this.spec.add(new String[]{"\\band\\b", "LOGICAL_OPERATORS"}); // Logical AND
+        this.spec.add(new String[]{"\\bor\\b", "LOGICAL_OPERATORS"}); // Logical OR
         this.spec.add(new String[]{"^&&", "LOGICAL_AND"}); // Logical AND
         this.spec.add(new String[]{"^\\|\\|", "LOGICAL_OR"}); // Logical OR
 //        this.spec.add(new String[]{"^!", "LOGICAL_NOT"}); // Logical NOT
@@ -51,7 +53,7 @@ public class Tokenizer {
         this.spec.add(new String[]{"^\\belse\\b", "else"});
 //        this.spec.add(new String[]{"^\\btrue\\b", "true"});
 //        this.spec.add(new String[]{"^\\bfalse\\b", "false"});
-        this.spec.add(new String[]{"^\\bnull\\b", "null"});
+//        this.spec.add(new String[]{"^\\bnull\\b", "null"});
 
         // --------------------------------------
         // OOP keywords

@@ -1,21 +1,8 @@
 program
-	i: Integer;
-	j: Integer;
-	n: Integer;
 
-	donothing(w : Boolean, x : Integer) : Integer is
-		x : Integer;
-	begin
-		x := (x + 1);
-		return x;
-	end ;
 begin
-a := -2 + 5 * 7;
-b := ---5 + 3;
-c := (-2 + 3) * 4;
-d := 100 / (-2 + 3) - 1 * 2;
+	some_function_name();
+	print another_function(4,4,5);
+	tt := null;
 
-	while (i<5) do
-	i:=(i+1);
-	end while;
 end;
