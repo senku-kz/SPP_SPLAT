@@ -145,17 +145,17 @@ public class Parser {
 			this.eat();
 			this.checkNext("(");
 
-			List<Declaration> decls = new ArrayList<>();
+			List<Declaration> functionParameters = new ArrayList<>();
+			List<Declaration> functionVariables = new ArrayList<>();
 
 			while (!peekNext(")")) {
 				Token token = this.currentToken;
 				this.eat();
 				this.checkNext(":");
 
-//				VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), this.currentToken.getValue());
-				VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), tokenTypeMapper.get(this.currentToken.getValue()));
+				VariableDecl functionParameter = new VariableDecl(this.currentToken, token.getValue(), tokenTypeMapper.get(this.currentToken.getValue()));
 				this.eat();
-				decls.add(var);
+				functionParameters.add(functionParameter);
 				if (this.peekNext(",")){
 					this.checkNext(",");
 				}
@@ -170,8 +170,8 @@ public class Parser {
 
 
 			while (!peekNext("begin")) {
-				Declaration decl = parseDecl();
-				decls.add(decl);
+				Declaration functionVariable = parseDecl();
+				functionVariables.add(functionVariable);
 			}
 
 
@@ -186,7 +186,8 @@ public class Parser {
 					functionName,
 					functionName.getValue(),
 					functionType.getValue(),
-					decls,
+					functionParameters,
+					functionVariables,
 					statements
 			);
 		}

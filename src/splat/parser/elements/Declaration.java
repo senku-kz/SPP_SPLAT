@@ -8,7 +8,5 @@ public abstract class Declaration extends ASTElement {
 		super(token);
 	}
 
-	public String  getLabel() {
-		return null;
-	}
+	public abstract String  getLabel();
 }

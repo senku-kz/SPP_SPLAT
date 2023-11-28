@@ -1,5 +1,6 @@
 package splat.semanticanalyzer;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -10,8 +11,8 @@ public class SemanticAnalyzer {
 
 	private ProgramAST progAST;
 	
-	private Map<String, FunctionDecl> funcMap;
-	private Map<String, TokenType> progVarMap;
+	private Map<String, FunctionDecl> funcMap = new HashMap<>();
+	private Map<String, TokenType> progVarMap = new HashMap<>();
 
 	public SemanticAnalyzer(ProgramAST progAST) {
 		this.progAST = progAST;
@@ -29,14 +30,14 @@ public class SemanticAnalyzer {
 		setProgVarAndFuncMaps();
 		
 		// Perform semantic analysis on the functions
-		for (FunctionDecl funcDecl : funcMap.values()) {	
+		for (FunctionDecl funcDecl : funcMap.values()) {
 			analyzeFuncDecl(funcDecl);
 		}
 		
 		// Perform semantic analysis on the program body
-		for (Statement stmt : progAST.getStmts()) {
-			stmt.analyze(funcMap, progVarMap);
-		}
+//		for (Statement stmt : progAST.getStmts()) {
+//			stmt.analyze(funcMap, progVarMap);
+//		}
 		
 	}
 
@@ -66,6 +67,31 @@ public class SemanticAnalyzer {
 									throws SemanticAnalysisException {
 		
 		// FIXME: Similar to checkNoDuplicateProgLabels()
+		Set<String> labels = new HashSet<String>();
+
+		for (Declaration functionParameterDecl : funcDecl.getParameters()) {
+			String label = functionParameterDecl.getLabel().toString();
+
+			if (labels.contains(label)) {
+				throw new SemanticAnalysisException("Cannot have duplicate label '"
+						+ label + "' in function parameters", functionParameterDecl);
+			} else {
+				labels.add(label);
+			}
+
+		}
+
+		for (Declaration functionVariableDecl : funcDecl.getVariables()) {
+			String label = functionVariableDecl.getLabel().toString();
+
+			if (labels.contains(label)) {
+				throw new SemanticAnalysisException("Cannot have duplicate label '"
+						+ label + "' in function parameters", functionVariableDecl);
+			} else {
+				labels.add(label);
+			}
+
+		}
 	}
 	
 	private void checkNoDuplicateProgLabels() throws SemanticAnalysisException {
