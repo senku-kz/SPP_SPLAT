@@ -225,8 +225,10 @@ public class Parser {
 			ASTElement statement_label = new LabelNode(this.currentToken);
 			this.eat();
 			this.checkNext(":=");
-			if (peekTwoAhead("(")){
-				return new StatementExpression(statement_label, this.functionCall());
+			if ("IDENTIFIER".equals(this.currentToken.getType()) && peekTwoAhead("(")){
+				StatementExpression callFunctionWithValue = new StatementExpression(statement_label, this.functionCall());
+				this.checkNext(";");
+				return callFunctionWithValue;
 			} else {
 				ASTElement expression = this.expression();
 				this.checkNext(";");
@@ -238,41 +240,30 @@ public class Parser {
 				Statement statementReturn = new StatementReturn(this.currentToken);
 				this.checkNext(";");
 				return statementReturn;
-			} else if (this.peekTwoAhead(";")) {
-				ASTElement value = null;
-				if ("NUMBER".equals(this.currentToken.getType())) {
-					value = new NumberNode(this.currentToken);
-				} else if ("IDENTIFIER".equals(this.currentToken.getType())) {
-					value = new VariableNode(this.currentToken);
-				}
-				Statement statementReturnValue = new StatementReturnValue(this.currentToken, value);
-				this.eat();
-				this.checkNext(";");
-				return statementReturnValue;
-			} else if (this.peekNext("(")){
+			} else {
 				ASTElement expression = this.expression();
 				Statement statementReturnValue = new StatementReturnValue(this.currentToken, expression);
 				this.eat();
-				this.checkNext(";");
 				return statementReturnValue;
 			}
 		} else if (this.peekNext("print")) {
-			this.eat();
-			Statement statementPrint;
+			this.checkNext("print");
+			StatementPrint statementPrint = new StatementPrint(this.currentToken);
+			ASTElement printExpression;
 
-			if ("IDENTIFIER".equals(this.currentToken.getType()) && peekTwoAhead("(")){
-				statementPrint = this.functionCall();
+			if ("IDENTIFIER".equals(this.currentToken.getType()) && peekTwoAhead("(")) {
+				printExpression = this.functionCall();
 			} else {
-				statementPrint = new StatementPrint(this.currentToken, this.currentToken.getValue());
-				this.eat();
-				this.checkNext(";");
+				printExpression = this.expression();
 			}
+			this.checkNext(";");
+			statementPrint.setPrintValue(printExpression);
+
 			return statementPrint;
 		} else if (this.peekNext("print_line")) {
-			Statement statementPrint = new StatementPrint(this.currentToken, this.currentToken.getValue());
 			this.checkNext("print_line");
 			this.checkNext(";");
-			return statementPrint;
+			return new StatementPrint(this.currentToken);
 		} else if (this.peekNext("while")) {
 			StatementWhile whileDo = new StatementWhile(this.currentToken);
 			this.eat();
@@ -296,11 +287,11 @@ public class Parser {
 		} else if (this.peekNext("if")) {
 			StatementIfElse statementIfElse = new StatementIfElse(this.currentToken);
 			this.eat();
-			this.checkNext("(");
+//			this.checkNext("(");
 
 			ASTElement statementExpression = this.expression();
 			statementIfElse.setExpression(statementExpression);
-			this.checkNext(")");
+//			this.checkNext(")");
 
 			this.checkNext("then");
 
@@ -326,17 +317,20 @@ public class Parser {
 
 			return statementIfElse;
 		} else if ("IDENTIFIER".equals(this.currentToken.getType()) && peekTwoAhead("(")) {
-			return this.functionCall();
+			StatementFunctionCall calledFunction = this.functionCall();
+			this.checkNext(";");
+			return calledFunction;
 		}
-		throw new ParseException("Unexpected statement.", this.currentToken.getLine(), this.currentToken.getColumn());
+		throw new ParseException("Unexpected statement: >>>" + this.currentToken.getValue() + "<<<",
+				this.currentToken.getLine(),
+				this.currentToken.getColumn()
+		);
 	}
 
 	private ASTElement expression() throws ParseException {
-//		ASTElement result = null;
 		ASTElement result = this.term();
 		while (!this.peekNext(";")){
 			if ("ADDITIVE_OPERATOR".equals(this.currentToken.getType())){
-//				result = this.term();
 				if ("+".equals(this.currentToken.getValue())) {
 					this.eat();
 					result = new BinaryExpression(ArithmeticOperators.Addition, result, this.term());
@@ -344,8 +338,12 @@ public class Parser {
 					this.eat();
 					result = new BinaryExpression(ArithmeticOperators.Subtraction, result, this.term());
 				}
+			} else if ("MODULUS_OPERATOR".equals(this.currentToken.getType())) {
+				if ("%".equals(this.currentToken.getValue())) {
+					this.eat();
+					result = new BinaryExpression(ArithmeticOperators.Modulus, result, this.term());
+				}
 			} else if ("RELATIONAL_OPERATOR".equals(this.currentToken.getType())) {
-//				result = this.term();
 				if ("<".equals(this.currentToken.getValue())){
 					this.eat();
 					result = new BinaryExpression(ArithmeticOperators.LessThan, result, this.term());
@@ -361,7 +359,6 @@ public class Parser {
 				}
 
 			} else if ("EQUALITY_OPERATOR".equals(this.currentToken.getType())) {
-//				result = this.term();
 				if ("==".equals(this.currentToken.getValue())){
 					this.eat();
 					result = new BinaryExpression(ArithmeticOperators.EqualTo, result, this.term());
@@ -370,7 +367,6 @@ public class Parser {
 					result = new BinaryExpression(ArithmeticOperators.NotEqualTo, result, this.term());
 				}
 			} else if ("LOGICAL_OPERATORS".equals(this.currentToken.getType())) {
-//				result = this.term();
 				if ("and".equals(this.currentToken.getValue())){
 					this.eat();
 					result = new BinaryExpression(ArithmeticOperators.LogicalAnd, result, this.term());
@@ -378,13 +374,14 @@ public class Parser {
 					this.eat();
 					result = new BinaryExpression(ArithmeticOperators.LogicalOr, result, this.term());
 				}
-			} else if ("LeftParen".equals(this.currentToken.getType())) {
-				result = this.term();
 			} else if ("IDENTIFIER".equals(this.currentToken.getType())) {
 				result = new VariableNode(this.currentToken);
 				eat();
-			} else if ("STRING".equals(this.currentToken.getType())) {
-				result = new StringNode(this.currentToken);
+//			} else if ("STRING".equals(this.currentToken.getType())) {
+//				result = new StringNode(this.currentToken);
+//				Token token = this.currentToken;
+//				eat();
+//				return new StringNode(token);
 			} else {
 				break;
 			}
@@ -414,6 +411,9 @@ public class Parser {
 			ASTElement expression = this.expression();
 			this.checkNext(")");
 			return expression;
+		} else if ("IDENTIFIER".equals(this.currentToken.getType()) && peekTwoAhead("(")) {
+			return this.functionCall();
+
 		} else if ("NUMBER".equals(this.currentToken.getType())) {
 			this.eat();
 			return new NumberNode(token);
@@ -426,8 +426,14 @@ public class Parser {
 		} else if ("-".equals(this.currentToken.getValue())) {
 			this.checkNext("-");
 			return new MinusNode(this.factor());
+		} else if ("STRING".equals(this.currentToken.getType())) {
+			this.eat();
+			return new StringNode(this.currentToken);
 		}
-		throw new ParseException("Unexpected factor in expression.", this.currentToken.getLine(), this.currentToken.getColumn());
+		throw new ParseException("Unexpected factor in expression: >>>" + this.currentToken.getValue() + "<<<",
+				this.currentToken.getLine(),
+				this.currentToken.getColumn()
+		);
 	}
 
 	private StatementFunctionCall functionCall() throws ParseException {
@@ -440,15 +446,13 @@ public class Parser {
 			this.checkNext("(");
 
 			while (!peekNext(")")) {
-				ArgumentNode argumentNode = new ArgumentNode(this.currentToken);
+				ASTElement argumentNode = this.expression();
 				procedureCall.addArgument(argumentNode);
-				this.eat();
 				if (peekNext(",")) {
 					this.checkNext(",");
 				}
 			}
 			this.checkNext(")");
-			this.checkNext(";");
 		}
 		return procedureCall;
 	}

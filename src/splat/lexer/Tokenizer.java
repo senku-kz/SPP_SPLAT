@@ -40,16 +40,17 @@ public class Tokenizer {
 
         // Logical Operators
         // ||, &&, !
-        this.spec.add(new String[]{"\\band\\b", "LOGICAL_OPERATORS"}); // Logical AND
-        this.spec.add(new String[]{"\\bor\\b", "LOGICAL_OPERATORS"}); // Logical OR
-        this.spec.add(new String[]{"^&&", "LOGICAL_AND"}); // Logical AND
-        this.spec.add(new String[]{"^\\|\\|", "LOGICAL_OR"}); // Logical OR
+        this.spec.add(new String[]{"^and\\b", "LOGICAL_OPERATORS"}); // Logical AND
+        this.spec.add(new String[]{"^or\\b", "LOGICAL_OPERATORS"}); // Logical OR
+//        this.spec.add(new String[]{"^&&", "LOGICAL_AND"}); // Logical AND
+//        this.spec.add(new String[]{"^\\|\\|", "LOGICAL_OR"}); // Logical OR
 //        this.spec.add(new String[]{"^!", "LOGICAL_NOT"}); // Logical NOT
 
         // --------------------------------------
         // Keywords
         this.spec.add(new String[]{"^\\blet\\b", "let"});
-        this.spec.add(new String[]{"^\\bif\\b", "if"});
+        this.spec.add(new String[]{"^if", "if"});
+        this.spec.add(new String[]{"^then", "then"});
         this.spec.add(new String[]{"^\\belse\\b", "else"});
 //        this.spec.add(new String[]{"^\\btrue\\b", "true"});
 //        this.spec.add(new String[]{"^\\bfalse\\b", "false"});
@@ -75,7 +76,7 @@ public class Tokenizer {
         // Math operators: +, -, *, /
         this.spec.add(new String[]{"^[+\\-]", "ADDITIVE_OPERATOR"});
         this.spec.add(new String[]{"^[*\\/]", "MULTIPLICATIVE_OPERATOR"});
-        this.spec.add(new String[]{"^[*\\%]", "MODULUS_OPERATOR"});
+        this.spec.add(new String[]{"^[%]", "MODULUS_OPERATOR"});
 
         // --------------------------------------
         // Assignment operators: :=, *=, /=, +=, -=
