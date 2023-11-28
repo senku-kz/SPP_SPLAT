@@ -30,6 +30,9 @@ public class StatementExpression extends Statement {
         if (this.node_left instanceof LabelNode) {
             LabelNode leftNode = (LabelNode)this.node_left;
             leftNodeType = varAndParamMap.get(leftNode.getLabel());
+            if (leftNodeType == null){
+                throw new SemanticAnalysisException("Undefined variable", this.node_left);
+            }
         } else if (this.node_left instanceof StringNode) {
             leftNodeType = TokenType.String;
         } else if (this.node_left instanceof NumberNode) {
@@ -39,6 +42,9 @@ public class StatementExpression extends Statement {
         if (this.node_right instanceof BinaryExpression){
             BinaryExpression rightNode = (BinaryExpression) this.node_right;
             rightNodeType = rightNode.analyzeAndGetType(funcMap, varAndParamMap);
+            if (rightNodeType == null){
+                throw new SemanticAnalysisException("Undefined variable", this.node_right);
+            }
         } else if (this.node_right instanceof StringNode) {
             rightNodeType = TokenType.String;
         } else if (this.node_right instanceof NumberNode) {
