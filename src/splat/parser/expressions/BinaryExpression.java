@@ -55,7 +55,7 @@ public class BinaryExpression extends Expression {
         } else if (this.node_right instanceof NumberNode) {
             rightNodeType = TokenType.Integer;
         } else if (this.node_right instanceof BinaryExpression) {
-            leftNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
+            rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
         }
 
         if (leftNodeType.equals(rightNodeType)){

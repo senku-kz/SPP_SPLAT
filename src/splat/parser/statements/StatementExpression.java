@@ -37,6 +37,8 @@ public class StatementExpression extends Statement {
             leftNodeType = TokenType.String;
         } else if (this.node_left instanceof NumberNode) {
             leftNodeType = TokenType.Integer;
+        } else if (this.node_left instanceof BinaryExpression) {
+            leftNodeType = ((BinaryExpression) this.node_left).analyzeAndGetType(funcMap, varAndParamMap);
         }
 
         if (this.node_right instanceof BinaryExpression){
@@ -49,6 +51,8 @@ public class StatementExpression extends Statement {
             rightNodeType = TokenType.String;
         } else if (this.node_right instanceof NumberNode) {
             rightNodeType = TokenType.Integer;
+        } else if (this.node_right instanceof BinaryExpression) {
+            rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
         }
 
         if (!leftNodeType.equals(rightNodeType)) {
