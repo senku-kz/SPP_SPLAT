@@ -4,6 +4,8 @@ import splat.lexer.Token;
 import splat.parser.elements.*;
 import splat.parser.expressions.BinaryExpression;
 import splat.parser.nodes.LabelNode;
+import splat.parser.nodes.NumberNode;
+import splat.parser.nodes.StringNode;
 import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
@@ -28,11 +30,19 @@ public class StatementExpression extends Statement {
         if (this.node_left instanceof LabelNode) {
             LabelNode leftNode = (LabelNode)this.node_left;
             leftNodeType = varAndParamMap.get(leftNode.getLabel());
+        } else if (this.node_left instanceof StringNode) {
+            leftNodeType = TokenType.String;
+        } else if (this.node_left instanceof NumberNode) {
+            leftNodeType = TokenType.Integer;
         }
 
         if (this.node_right instanceof BinaryExpression){
             BinaryExpression rightNode = (BinaryExpression) this.node_right;
             rightNodeType = rightNode.analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (this.node_right instanceof StringNode) {
+            rightNodeType = TokenType.String;
+        } else if (this.node_right instanceof NumberNode) {
+            rightNodeType = TokenType.Integer;
         }
 
         if (!leftNodeType.equals(rightNodeType)) {
