@@ -1,6 +1,7 @@
 package splat.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import splat.lexer.Token;
@@ -16,10 +17,17 @@ public class Parser {
 
 	private Token currentToken;
 
+	private final HashMap<String, TokenType> tokenTypeMapper = new HashMap<>();
+
 	public Parser(List<Token> tokens) {
 		this.tokens = tokens;
 		this.currentToken = this.tokens.get(0);
+
+		this.tokenTypeMapper.put("NUMBER", TokenType.NUMBER);
+		this.tokenTypeMapper.put("STRING", TokenType.STRING);
+		this.tokenTypeMapper.put("IDENTIFIER", TokenType.IDENTIFIER);
 	}
+
 
 	/**
 	 * Compares the next token to an expected value, and throws
@@ -143,7 +151,9 @@ public class Parser {
 				Token token = this.currentToken;
 				this.eat();
 				this.checkNext(":");
-				VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), this.currentToken.getValue());
+
+//				VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), this.currentToken.getValue());
+				VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), tokenTypeMapper.get(this.currentToken.getValue()));
 				this.eat();
 				decls.add(var);
 				if (this.peekNext(",")){
@@ -192,7 +202,8 @@ public class Parser {
 			Token token = this.currentToken;
 			this.eat();
 			this.checkNext(":");
-			VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), this.currentToken.getValue());
+//			VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), this.currentToken.getValue());
+			VariableDecl var = new VariableDecl(this.currentToken, token.getValue(), this.tokenTypeMapper.get(this.currentToken.getValue()));
 			this.eat();
 			this.checkNext(";");
 			return var;

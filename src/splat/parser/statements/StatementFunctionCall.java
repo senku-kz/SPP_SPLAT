@@ -2,10 +2,13 @@ package splat.parser.statements;
 
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
+import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
+import splat.parser.elements.TokenType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class StatementFunctionCall extends Statement {
     ASTElement functionName;
@@ -14,6 +17,11 @@ public class StatementFunctionCall extends Statement {
     public StatementFunctionCall(Token tok) {
         super(tok);
         this.arguments = new ArrayList<>();
+    }
+
+    @Override
+    public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) {
+
     }
 
     public ASTElement getFunctionName() {

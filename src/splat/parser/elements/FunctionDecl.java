@@ -29,4 +29,8 @@ public class FunctionDecl extends Declaration {
 	public String toString() {
 		return null;
 	}
+
+	public List<Statement> getStmts() {
+		return this.statements;
+	}
 }
