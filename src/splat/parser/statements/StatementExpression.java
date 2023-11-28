@@ -3,10 +3,7 @@ package splat.parser.statements;
 import splat.lexer.Token;
 import splat.parser.elements.*;
 import splat.parser.expressions.BinaryExpression;
-import splat.parser.nodes.LabelNode;
-import splat.parser.nodes.NumberNode;
-import splat.parser.nodes.StringNode;
-import splat.parser.nodes.VariableNode;
+import splat.parser.nodes.*;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
@@ -39,6 +36,8 @@ public class StatementExpression extends Statement {
             leftNodeType = TokenType.Integer;
         } else if (this.node_left instanceof BinaryExpression) {
             leftNodeType = ((BinaryExpression) this.node_left).analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (this.node_left instanceof BooleanNode) {
+            leftNodeType = TokenType.Boolean;
         }
 
         if (this.node_right instanceof BinaryExpression){
@@ -53,6 +52,8 @@ public class StatementExpression extends Statement {
             rightNodeType = TokenType.Integer;
         } else if (this.node_right instanceof BinaryExpression) {
             rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (this.node_right instanceof BooleanNode) {
+            rightNodeType = TokenType.Boolean;
         }
 
         if (!leftNodeType.equals(rightNodeType)) {

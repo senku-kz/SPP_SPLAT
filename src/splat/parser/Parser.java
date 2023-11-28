@@ -435,7 +435,11 @@ public class Parser {
 			return new NumberNode(token);
 		} else if ("IDENTIFIER".equals(this.currentToken.getType())){
 			this.eat();
-			return new VariableNode(token);
+			if ("true".equals(token.getValue()) || "false".equals(token.getValue())){
+				return new BooleanNode(token);
+			} else {
+				return new VariableNode(token);
+			}
 		} else if ("+".equals(this.currentToken.getValue())) {
 			this.checkNext("+");
 			return new PlusNode(this.factor());

@@ -5,10 +5,7 @@ import splat.parser.elements.ASTElement;
 import splat.parser.elements.Expression;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.TokenType;
-import splat.parser.nodes.LabelNode;
-import splat.parser.nodes.NumberNode;
-import splat.parser.nodes.StringNode;
-import splat.parser.nodes.VariableNode;
+import splat.parser.nodes.*;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
@@ -42,6 +39,8 @@ public class BinaryExpression extends Expression {
             leftNodeType = TokenType.Integer;
         } else if (this.node_left instanceof BinaryExpression) {
             leftNodeType = ((BinaryExpression) this.node_left).analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (this.node_left instanceof BooleanNode) {
+            leftNodeType = TokenType.Boolean;
         }
 
         if (this.node_right instanceof VariableNode) {
@@ -56,6 +55,8 @@ public class BinaryExpression extends Expression {
             rightNodeType = TokenType.Integer;
         } else if (this.node_right instanceof BinaryExpression) {
             rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (this.node_right instanceof BooleanNode) {
+            rightNodeType = TokenType.Boolean;
         }
 
         if (leftNodeType.equals(rightNodeType)){
