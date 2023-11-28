@@ -40,37 +40,27 @@ public class Tokenizer {
 
         // Logical Operators
         // ||, &&, !
-        this.spec.add(new String[]{"^and\\b", "LOGICAL_OPERATORS"}); // Logical AND
-        this.spec.add(new String[]{"^or\\b", "LOGICAL_OPERATORS"}); // Logical OR
+        this.spec.add(new String[]{"^and", "LOGICAL_OPERATORS"}); // Logical AND
+        this.spec.add(new String[]{"^or", "LOGICAL_OPERATORS"}); // Logical OR
 //        this.spec.add(new String[]{"^&&", "LOGICAL_AND"}); // Logical AND
 //        this.spec.add(new String[]{"^\\|\\|", "LOGICAL_OR"}); // Logical OR
 //        this.spec.add(new String[]{"^!", "LOGICAL_NOT"}); // Logical NOT
 
         // --------------------------------------
         // Keywords
-        this.spec.add(new String[]{"^\\blet\\b", "let"});
+        this.spec.add(new String[]{"^let$", "let"});
         this.spec.add(new String[]{"^if", "if"});
         this.spec.add(new String[]{"^then", "then"});
-        this.spec.add(new String[]{"^\\belse\\b", "else"});
+        this.spec.add(new String[]{"^else", "else"});
 //        this.spec.add(new String[]{"^\\btrue\\b", "true"});
 //        this.spec.add(new String[]{"^\\bfalse\\b", "false"});
 //        this.spec.add(new String[]{"^\\bnull\\b", "null"});
 
         // --------------------------------------
-        // OOP keywords
-        this.spec.add(new String[]{"^\\bclass\\b", "class"});
-        this.spec.add(new String[]{"^\\bthis\\b", "this"});
-        this.spec.add(new String[]{"^\\bextends\\b", "extends"});
-        this.spec.add(new String[]{"^\\bsuper\\b", "super"});
-        this.spec.add(new String[]{"^\\bnew\\b", "new"});
-
-        // --------------------------------------
         // Iterators
-        this.spec.add(new String[]{"^\\bwhile\\b", "while"});
-        this.spec.add(new String[]{"^\\bdo\\b", "do"});
-        this.spec.add(new String[]{"^\\bfor\\b", "for"});
-        this.spec.add(new String[]{"^\\bdef\\b", "def"});
-        this.spec.add(new String[]{"^\\breturn\\b", "return"});
+        this.spec.add(new String[]{"^while\\b", "while"});
+        this.spec.add(new String[]{"^do$", "do"});
+        this.spec.add(new String[]{"^return", "return"});
 
         // --------------------------------------
         // Math operators: +, -, *, /
