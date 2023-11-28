@@ -54,7 +54,7 @@ public class  SplatTester {
 
 		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith(".splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("my_test_001_goodexecution.splat"));
-//		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("my_1_badsemantics.splat"));
+//		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("999_00_goodexecution.splat"));
 
 		totalTests = testFiles.length;
 		System.out.println("Number of tests found: " + totalTests);

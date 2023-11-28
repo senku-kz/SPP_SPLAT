@@ -33,19 +33,29 @@ public class BinaryExpression extends Expression {
         if (this.node_left instanceof VariableNode) {
             VariableNode leftNode = (VariableNode)this.node_left;
             leftNodeType = varAndParamMap.get(leftNode.getValue());
+            if (leftNodeType == null){
+                throw new SemanticAnalysisException("Undefined variable", this.node_left);
+            }
         } else if (this.node_left instanceof StringNode) {
             leftNodeType = TokenType.String;
         } else if (this.node_left instanceof NumberNode) {
             leftNodeType = TokenType.Integer;
+        } else if (this.node_left instanceof BinaryExpression) {
+            leftNodeType = ((BinaryExpression) this.node_left).analyzeAndGetType(funcMap, varAndParamMap);
         }
 
         if (this.node_right instanceof VariableNode) {
             VariableNode rightNode = (VariableNode)this.node_right;
             rightNodeType = varAndParamMap.get(rightNode.getValue());
+            if (rightNodeType == null){
+                throw new SemanticAnalysisException("Undefined variable", this.node_right);
+            }
         } else if (this.node_right instanceof StringNode) {
             rightNodeType = TokenType.String;
         } else if (this.node_right instanceof NumberNode) {
             rightNodeType = TokenType.Integer;
+        } else if (this.node_right instanceof BinaryExpression) {
+            leftNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
         }
 
         if (leftNodeType.equals(rightNodeType)){
