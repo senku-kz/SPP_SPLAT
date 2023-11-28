@@ -35,9 +35,9 @@ public class SemanticAnalyzer {
 		}
 		
 		// Perform semantic analysis on the program body
-//		for (Statement stmt : progAST.getStmts()) {
-//			stmt.analyze(funcMap, progVarMap);
-//		}
+		for (Statement stmt : progAST.getStmts()) {
+			stmt.analyze(funcMap, progVarMap);
+		}
 		
 	}
 
@@ -58,9 +58,26 @@ public class SemanticAnalyzer {
 	
 	
 	private Map<String, TokenType> getVarAndParamMap(FunctionDecl funcDecl) {
-		
+		Map<String, TokenType> labels = new HashMap<>();
+		String label;
 		// FIXME: Somewhat similar to setProgVarAndFuncMaps()
-		return null;
+		for (Declaration functionParameter : funcDecl.getParameters()) {
+			label = functionParameter.getLabel().toString();
+			if (functionParameter instanceof VariableDecl) {
+				VariableDecl variableDecl = (VariableDecl)functionParameter;
+				labels.put(label, variableDecl.getType());
+			}
+		}
+
+		for (Declaration functionVariable : funcDecl.getVariables()) {
+			label = functionVariable.getLabel().toString();
+			if (functionVariable instanceof VariableDecl) {
+				VariableDecl variableDecl = (VariableDecl)functionVariable;
+				labels.put(label, variableDecl.getType());
+			}
+		}
+
+		return labels;
 	}
 
 	private void checkNoDuplicateFuncLabels(FunctionDecl funcDecl) 
@@ -68,9 +85,10 @@ public class SemanticAnalyzer {
 		
 		// FIXME: Similar to checkNoDuplicateProgLabels()
 		Set<String> labels = new HashSet<String>();
+		String label;
 
 		for (Declaration functionParameterDecl : funcDecl.getParameters()) {
-			String label = functionParameterDecl.getLabel().toString();
+			label = functionParameterDecl.getLabel().toString();
 
 			if (labels.contains(label)) {
 				throw new SemanticAnalysisException("Cannot have duplicate label '"
@@ -82,7 +100,7 @@ public class SemanticAnalyzer {
 		}
 
 		for (Declaration functionVariableDecl : funcDecl.getVariables()) {
-			String label = functionVariableDecl.getLabel().toString();
+			label = functionVariableDecl.getLabel().toString();
 
 			if (labels.contains(label)) {
 				throw new SemanticAnalysisException("Cannot have duplicate label '"
@@ -112,7 +130,6 @@ public class SemanticAnalyzer {
 	}
 	
 	private void setProgVarAndFuncMaps() {
-		
 		for (Declaration decl : progAST.getDecls()) {
 
 			String label = decl.getLabel().toString();

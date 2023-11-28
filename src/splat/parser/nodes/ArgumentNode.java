@@ -15,4 +15,5 @@ public class ArgumentNode extends ASTElement {
             this.argument = new VariableNode(token);
         }
     }
+
 }

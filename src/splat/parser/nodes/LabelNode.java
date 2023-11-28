@@ -9,4 +9,8 @@ public class LabelNode extends ASTElement {
         super(token);
         this.label = token.getValue();
     }
+
+    public String getLabel() {
+        return label;
+    }
 }

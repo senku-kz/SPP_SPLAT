@@ -3,6 +3,7 @@ package splat.parser.elements;
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
 import splat.lexer.Token;
+import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public abstract class Statement extends ASTElement {
 	 * sub-expressions.
 	 */
 	 public abstract void analyze(Map<String, FunctionDecl> funcMap,
-	                              Map<String, TokenType> varAndParamMap);
+	                              Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException;
 
 	public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> progVarMap) throws ReturnFromCall{
 

@@ -1,8 +1,8 @@
 program
-
+	a : String;
+	b : Integer;
+    c : Integer;
 begin
-	some_function_name();
-	print another_function(4,4,5);
-	tt := null;
+	c := 5 + b;
 
 end;

@@ -11,8 +11,8 @@ public class VariableDecl extends Declaration {
 	// Need to add extra arguments for setting fields in the constructor 
 	public VariableDecl(Token token, String label, TokenType type) {
 		super(token);
-		this.label = label;
 		this.type = type;
+		this.label = label;
 	}
 
 	// Getters?

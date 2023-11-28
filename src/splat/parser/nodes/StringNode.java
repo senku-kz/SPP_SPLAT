@@ -10,4 +10,8 @@ public class StringNode extends ASTElement {
         super(token);
         this.stringValue = token.getValue();
     }
+
+    public String getStringValue() {
+        return stringValue;
+    }
 }

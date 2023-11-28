@@ -23,9 +23,9 @@ public class Parser {
 		this.tokens = tokens;
 		this.currentToken = this.tokens.get(0);
 
-		this.tokenTypeMapper.put("NUMBER", TokenType.NUMBER);
-		this.tokenTypeMapper.put("STRING", TokenType.STRING);
-		this.tokenTypeMapper.put("IDENTIFIER", TokenType.IDENTIFIER);
+		this.tokenTypeMapper.put("Integer", TokenType.Integer);
+		this.tokenTypeMapper.put("Boolean", TokenType.Boolean);
+		this.tokenTypeMapper.put("String", TokenType.String);
 	}
 
 
@@ -153,7 +153,11 @@ public class Parser {
 				this.eat();
 				this.checkNext(":");
 
-				VariableDecl functionParameter = new VariableDecl(this.currentToken, token.getValue(), tokenTypeMapper.get(this.currentToken.getValue()));
+				VariableDecl functionParameter = new VariableDecl(
+						this.currentToken,
+						token.getValue(),
+						tokenTypeMapper.get(this.currentToken.getValue())
+				);
 				this.eat();
 				functionParameters.add(functionParameter);
 				if (this.peekNext(",")){
@@ -440,7 +444,7 @@ public class Parser {
 			return new MinusNode(this.factor());
 		} else if ("STRING".equals(this.currentToken.getType())) {
 			this.eat();
-			return new StringNode(this.currentToken);
+			return new StringNode(token);
 		}
 		throw new ParseException("Unexpected factor in expression: >>>" + this.currentToken.getValue() + "<<<",
 				this.currentToken.getLine(),
