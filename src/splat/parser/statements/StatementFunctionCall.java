@@ -1,10 +1,10 @@
 package splat.parser.statements;
 
 import splat.lexer.Token;
-import splat.parser.elements.ASTElement;
-import splat.parser.elements.FunctionDecl;
-import splat.parser.elements.Statement;
-import splat.parser.elements.TokenType;
+import splat.parser.elements.*;
+import splat.parser.expressions.BinaryExpression;
+import splat.parser.nodes.LabelNode;
+import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.ArrayList;
@@ -21,15 +21,36 @@ public class StatementFunctionCall extends Statement {
     }
 
     @Override
-    public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) {
-        TokenType functionReturnType = varAndParamMap.get(this.functionName.toString());
+    public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
+        TokenType vnType = null;
 
-        FunctionDecl functionDecl = funcMap.get(this.functionName.toString());
+        LabelNode functionName = (LabelNode)this.functionName;
+        TokenType nodeType = funcMap.get(functionName.getLabel()).getType();
 
+        List<Declaration> functionVarDecl = funcMap.get(functionName.getLabel()).getParameters();
+        List<ASTElement> functionCallParameters = this.arguments;
 
-//        if (!leftNodeType.equals(rightNodeType)) {
-//            throw new SemanticAnalysisException("Type mismatch between left and right StatementExpression", this.node_left);
-//        }
+        if (functionVarDecl.size() != functionCallParameters.size()){
+            throw new SemanticAnalysisException("Number of parameters do not match", this.functionName);
+        }
+
+        for (int i = 0; i < functionCallParameters.size(); i++ ) {
+            VariableDecl vd = (VariableDecl)functionVarDecl.get(i);
+            TokenType vdType = vd.getType();
+
+            ASTElement vn = functionCallParameters.get(i);
+            if (vn instanceof VariableNode) {
+                VariableNode vn2 = (VariableNode) vn;
+                vnType = varAndParamMap.get(vn2.getValue());
+            } else if (vn instanceof BinaryExpression) {
+                BinaryExpression vn2 = (BinaryExpression) vn;
+                vnType = vn2.analyzeAndGetType(funcMap, varAndParamMap);
+            }
+
+            if (!vdType.equals(vnType)){
+                throw new SemanticAnalysisException("Parameters type do not match", this.functionName);
+            }
+        }
     }
 
     public ASTElement getFunctionName() {

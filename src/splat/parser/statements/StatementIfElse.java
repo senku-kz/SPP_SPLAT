@@ -9,20 +9,20 @@ import splat.parser.expressions.BinaryExpression;
 import splat.parser.nodes.BooleanNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class StatementIfElse extends Statement {
     ASTElement expression;
     List<Statement> thanStatement;
-    List<Statement> elseStatement = null;
+    List<Statement> elseStatement = new ArrayList<>();
     public StatementIfElse(Token tok) {
         super(tok);
     }
 
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
-        System.out.println("if-then-else");
         if (this.expression instanceof BinaryExpression){
             BinaryExpression expr = (BinaryExpression) this.expression;
             expr.analyzeAndGetType(funcMap, varAndParamMap);

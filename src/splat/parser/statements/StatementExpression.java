@@ -6,6 +6,7 @@ import splat.parser.expressions.BinaryExpression;
 import splat.parser.nodes.*;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
+import java.util.List;
 import java.util.Map;
 
 public class StatementExpression extends Statement {
@@ -52,6 +53,27 @@ public class StatementExpression extends Statement {
             rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
         } else if (this.node_right instanceof BooleanNode) {
             rightNodeType = TokenType.Boolean;
+        } else if (this.node_right instanceof StatementFunctionCall) {
+            StatementFunctionCall functionCall = (StatementFunctionCall) this.node_right;
+            rightNodeType = funcMap.get(((LabelNode) functionCall.getFunctionName()).getLabel()).getType();
+
+            List<Declaration> functionVarDecl = funcMap.get(((LabelNode) functionCall.getFunctionName()).getLabel()).getParameters();
+            List<ASTElement> functionCallParameters = functionCall.getArguments();
+
+            if (functionVarDecl.size() != functionCallParameters.size()){
+                throw new SemanticAnalysisException("Number of parameters do not match", this.node_right);
+            }
+
+            for (Integer i = 0; i < functionCallParameters.size(); i++ ) {
+                VariableDecl vd = (VariableDecl)functionVarDecl.get(i);
+                TokenType vdType = vd.getType();
+
+                VariableNode vn = (VariableNode) functionCallParameters.get(i);
+                TokenType vnType = varAndParamMap.get(vn.getValue());
+                if (!vdType.equals(vnType)){
+                    throw new SemanticAnalysisException("Parameters type do not match", this.node_right);
+                }
+            }
         }
 
         if (!leftNodeType.equals(rightNodeType)) {
