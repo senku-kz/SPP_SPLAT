@@ -16,13 +16,15 @@ public class StatementReturn extends Statement {
 
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
-        Map.Entry<String, FunctionDecl> firstEntry = funcMap.entrySet().iterator().next();
-        String functionName = firstEntry.getKey();
-        FunctionDecl functionDecl = firstEntry.getValue();
-        if (!"void".equals(functionDecl.getType().toString())){
-            throw new SemanticAnalysisException("Error in returning the type of the declared function >>>" + functionName + "<<<",
-                    functionDecl
-            );
-        }
+
+//        Map.Entry<String, FunctionDecl> firstEntry = funcMap.entrySet().iterator().next();
+//        String functionName = firstEntry.getKey();
+//        FunctionDecl functionDecl = firstEntry.getValue();
+//        if (!"void".equals(functionDecl.getType().toString())){
+//            throw new SemanticAnalysisException("Error in returning the type of the declared function >>>" + functionName + "<<<",
+//                    functionDecl
+//            );
+//        }
+
     }
 }

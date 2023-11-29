@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import splat.parser.elements.*;
+import splat.parser.statements.StatementReturn;
 
 public class SemanticAnalyzer {
 
@@ -52,6 +53,12 @@ public class SemanticAnalyzer {
 		
 		// Perform semantic analysis on the function body
 		for (Statement stmt : funcDecl.getStmts()) {
+
+			if (stmt instanceof StatementReturn){
+				if (!"void".equals(funcDecl.getType().toString())){
+					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
+				}
+			}
 			stmt.analyze(funcMap, varAndParamMap);
 		}
 	}
