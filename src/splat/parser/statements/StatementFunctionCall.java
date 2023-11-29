@@ -25,7 +25,11 @@ public class StatementFunctionCall extends Statement {
         TokenType vnType = null;
 
         LabelNode functionName = (LabelNode)this.functionName;
-        TokenType nodeType = funcMap.get(functionName.getLabel()).getType();
+
+        if (funcMap.get(functionName.getLabel()) == null){
+            throw new SemanticAnalysisException("Function not declared.", this.functionName);
+        }
+//        TokenType nodeType = funcMap.get(functionName.getLabel()).getType();
 
         List<Declaration> functionVarDecl = funcMap.get(functionName.getLabel()).getParameters();
         List<ASTElement> functionCallParameters = this.arguments;
