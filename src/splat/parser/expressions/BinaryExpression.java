@@ -37,7 +37,19 @@ public class BinaryExpression extends Expression {
         } else if (this.node_left instanceof StringNode) {
             leftNodeType = TokenType.String;
         } else if (this.node_left instanceof NumberNode) {
-            leftNodeType = TokenType.Integer;
+            if (
+                    ArithmeticOperators.GreaterThan.equals(this.operator)
+                            || ArithmeticOperators.LessThan.equals(this.operator)
+                            || ArithmeticOperators.GreaterThanOrEqualTo.equals(this.operator)
+                            || ArithmeticOperators.LessThanOrEqualTo.equals(this.operator)
+                            || ArithmeticOperators.EqualTo.equals(this.operator)
+                            || ArithmeticOperators.NotEqualTo.equals(this.operator)
+            ){
+                leftNodeType = TokenType.Boolean;
+            } else {
+                leftNodeType = TokenType.Integer;
+            }
+//            leftNodeType = TokenType.Integer;
         } else if (this.node_left instanceof BinaryExpression) {
             leftNodeType = ((BinaryExpression) this.node_left).analyzeAndGetType(funcMap, varAndParamMap);
         } else if (this.node_left instanceof BooleanNode) {
@@ -54,7 +66,19 @@ public class BinaryExpression extends Expression {
         } else if (this.node_right instanceof StringNode) {
             rightNodeType = TokenType.String;
         } else if (this.node_right instanceof NumberNode) {
-            rightNodeType = TokenType.Integer;
+            if (
+                    ArithmeticOperators.GreaterThan.equals(this.operator)
+                            || ArithmeticOperators.LessThan.equals(this.operator)
+                            || ArithmeticOperators.GreaterThanOrEqualTo.equals(this.operator)
+                            || ArithmeticOperators.LessThanOrEqualTo.equals(this.operator)
+                            || ArithmeticOperators.EqualTo.equals(this.operator)
+                            || ArithmeticOperators.NotEqualTo.equals(this.operator)
+            ){
+                rightNodeType = TokenType.Boolean;
+            } else {
+                rightNodeType = TokenType.Integer;
+            }
+//            rightNodeType = TokenType.Integer;
         } else if (this.node_right instanceof BinaryExpression) {
             rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
         } else if (this.node_right instanceof BooleanNode) {
