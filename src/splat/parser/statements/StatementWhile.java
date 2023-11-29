@@ -6,6 +6,7 @@ import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
 import splat.parser.expressions.BinaryExpression;
+import splat.parser.nodes.BooleanNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.List;
@@ -24,6 +25,10 @@ public class StatementWhile extends Statement {
         if (this.expression instanceof BinaryExpression){
             BinaryExpression expr = (BinaryExpression) this.expression;
             expr.analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (this.expression instanceof BooleanNode) {
+
+        } else {
+            throw new SemanticAnalysisException("Unexpected expression in while", this.expression);
         }
 
         for (Statement stmt : this.statements){
