@@ -26,6 +26,7 @@ public class Parser {
 		this.tokenTypeMapper.put("Integer", TokenType.Integer);
 		this.tokenTypeMapper.put("Boolean", TokenType.Boolean);
 		this.tokenTypeMapper.put("String", TokenType.String);
+		this.tokenTypeMapper.put("void", TokenType.Void);
 	}
 
 

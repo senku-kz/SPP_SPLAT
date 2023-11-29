@@ -56,7 +56,7 @@ public class SemanticAnalyzer {
 		// Get the types of the parameters and local variables
 		Map<String, TokenType> varAndParamMap = getVarAndParamMap(funcDecl);
 
-		TokenType returnValueType = null;
+		TokenType returnValueType = TokenType.Void;
 		// Perform semantic analysis on the function body
 		for (Statement stmt : funcDecl.getStmts()) {
 			if (stmt instanceof StatementReturn){
