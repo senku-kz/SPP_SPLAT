@@ -40,3 +40,6 @@ BinaryExpression
 
 
 https://www.youtube.com/watch?v=TwKWUj033vY
+
+
+? bt_02_badsemantics.splat
