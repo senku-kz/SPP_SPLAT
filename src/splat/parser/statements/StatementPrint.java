@@ -5,6 +5,12 @@ import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
+import splat.parser.expressions.BinaryExpression;
+import splat.parser.nodes.BooleanNode;
+import splat.parser.nodes.NumberNode;
+import splat.parser.nodes.StringNode;
+import splat.parser.nodes.VariableNode;
+import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
 
@@ -15,8 +21,23 @@ public class StatementPrint extends Statement {
     }
 
     @Override
-    public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) {
+    public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
+        TokenType nodeType = null;
+        if (this.printValue instanceof NumberNode) {
+            nodeType = TokenType.Integer;
+        } else if (this.printValue instanceof BooleanNode) {
+            nodeType = TokenType.Boolean;
+        } else if (this.printValue instanceof StringNode){
+            nodeType = TokenType.String;
+        } else if (this.printValue instanceof BinaryExpression) {
+            nodeType = ((BinaryExpression) this.printValue).analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (this.printValue instanceof VariableNode) {
+            nodeType = varAndParamMap.get(((VariableNode) this.printValue).getValue());
+        }
 
+//        if (!TokenType.String.equals(nodeType)){
+//            throw new SemanticAnalysisException("Print value not a String type", this.printValue);
+//        }
     }
 
     public void setPrintValue(ASTElement printValue) {
