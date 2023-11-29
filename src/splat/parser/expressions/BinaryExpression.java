@@ -31,7 +31,8 @@ public class BinaryExpression extends Expression {
             VariableNode leftNode = (VariableNode)this.node_left;
             leftNodeType = varAndParamMap.get(leftNode.getValue());
             if (leftNodeType == null){
-                throw new SemanticAnalysisException("Undefined variable", this.node_left);
+                String msg = String.format("Undefined variable %s", leftNode.getValue());
+                throw new SemanticAnalysisException(msg, this.node_left);
             }
         } else if (this.node_left instanceof StringNode) {
             leftNodeType = TokenType.String;
@@ -47,7 +48,8 @@ public class BinaryExpression extends Expression {
             VariableNode rightNode = (VariableNode)this.node_right;
             rightNodeType = varAndParamMap.get(rightNode.getValue());
             if (rightNodeType == null){
-                throw new SemanticAnalysisException("Undefined variable", this.node_right);
+                String msg = String.format("Undefined variable %s", rightNode.getValue());
+                throw new SemanticAnalysisException(msg, this.node_right);
             }
         } else if (this.node_right instanceof StringNode) {
             rightNodeType = TokenType.String;

@@ -297,7 +297,7 @@ public class Parser {
 			this.checkNext("end");
 			this.checkNext("while");
 			this.checkNext(";");
-			whileDo.setStatement(stmts);
+			whileDo.setStatements(stmts);
 
 			return whileDo;
 		} else if (this.peekNext("if")) {

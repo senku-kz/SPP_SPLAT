@@ -9,6 +9,7 @@ import splat.parser.expressions.BinaryExpression;
 import splat.parser.nodes.BooleanNode;
 import splat.parser.nodes.NumberNode;
 import splat.parser.nodes.StringNode;
+import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
@@ -31,6 +32,8 @@ public class StatementReturnValue extends Statement {
             nodeType = TokenType.String;
         } else if (this.value instanceof BinaryExpression) {
             nodeType = ((BinaryExpression) this.value).analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (this.value instanceof VariableNode) {
+            nodeType = varAndParamMap.get(((VariableNode) this.value).getValue());
         }
 
         Map.Entry<String, FunctionDecl> firstEntry = funcMap.entrySet().iterator().next();
