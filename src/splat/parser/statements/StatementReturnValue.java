@@ -21,6 +21,10 @@ public class StatementReturnValue extends Statement {
         this.value = value;
     }
 
+    public ASTElement getValue() {
+        return value;
+    }
+
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
         TokenType nodeType = null;

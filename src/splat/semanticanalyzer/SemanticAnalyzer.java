@@ -6,7 +6,12 @@ import java.util.Map;
 import java.util.Set;
 
 import splat.parser.elements.*;
+import splat.parser.nodes.BooleanNode;
+import splat.parser.nodes.NumberNode;
+import splat.parser.nodes.StringNode;
+import splat.parser.nodes.VariableNode;
 import splat.parser.statements.StatementReturn;
+import splat.parser.statements.StatementReturnValue;
 
 public class SemanticAnalyzer {
 
@@ -50,16 +55,33 @@ public class SemanticAnalyzer {
 		
 		// Get the types of the parameters and local variables
 		Map<String, TokenType> varAndParamMap = getVarAndParamMap(funcDecl);
-		
+
+		TokenType returnValueType = null;
 		// Perform semantic analysis on the function body
 		for (Statement stmt : funcDecl.getStmts()) {
-
 			if (stmt instanceof StatementReturn){
 				if (!"void".equals(funcDecl.getType().toString())){
 					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
 				}
+			} else if (stmt instanceof StatementReturnValue) {
+				StatementReturnValue returnValue = (StatementReturnValue) stmt;
+				if (returnValue.getValue() instanceof VariableNode) {
+					VariableNode vn = (VariableNode) returnValue.getValue();
+					returnValueType = varAndParamMap.get(vn.getValue());
+				} else if (returnValue.getValue() instanceof NumberNode) {
+					returnValueType = TokenType.Integer;
+				} else if (returnValue.getValue() instanceof BooleanNode) {
+					returnValueType = TokenType.Boolean;
+				} else if (returnValue.getValue() instanceof StringNode) {
+					returnValueType = TokenType.String;
+				}
+
 			}
 			stmt.analyze(funcMap, varAndParamMap);
+		}
+
+		if (!funcDecl.getType().equals(returnValueType)){
+			throw new SemanticAnalysisException("Error in returning the type of the declared function.", funcDecl);
 		}
 	}
 	

@@ -73,8 +73,19 @@ public class StatementExpression extends Statement {
                 VariableDecl vd = (VariableDecl)functionVarDecl.get(i);
                 TokenType vdType = vd.getType();
 
-                VariableNode vn = (VariableNode) functionCallParameters.get(i);
-                TokenType vnType = varAndParamMap.get(vn.getValue());
+                TokenType vnType = null;
+                ASTElement functionParameter = functionCallParameters.get(i);
+                if (functionParameter instanceof VariableNode) {
+                    VariableNode vn = (VariableNode) functionCallParameters.get(i);
+                    vnType = varAndParamMap.get(vn.getValue());
+                } else if (functionParameter instanceof NumberNode) {
+                    vnType = TokenType.Integer;
+                } else if (functionParameter instanceof BooleanNode) {
+                    vnType = TokenType.Boolean;
+                } else if (functionParameter instanceof StringNode) {
+                    vnType = TokenType.String;
+                }
+
                 if (!vdType.equals(vnType)){
                     throw new SemanticAnalysisException("Parameters type do not match", this.node_right);
                 }
