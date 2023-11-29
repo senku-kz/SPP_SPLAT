@@ -55,6 +55,11 @@ public class StatementExpression extends Statement {
             rightNodeType = TokenType.Boolean;
         } else if (this.node_right instanceof StatementFunctionCall) {
             StatementFunctionCall functionCall = (StatementFunctionCall) this.node_right;
+
+            if (funcMap.get(((LabelNode) functionCall.getFunctionName()).getLabel()) == null){
+                throw new SemanticAnalysisException("Called function not declared.", this.node_right);
+            }
+
             rightNodeType = funcMap.get(((LabelNode) functionCall.getFunctionName()).getLabel()).getType();
 
             List<Declaration> functionVarDecl = funcMap.get(((LabelNode) functionCall.getFunctionName()).getLabel()).getParameters();
