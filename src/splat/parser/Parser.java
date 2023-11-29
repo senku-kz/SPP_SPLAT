@@ -189,7 +189,7 @@ public class Parser {
             return new FunctionDecl(
 					functionName,
 					functionName.getValue(),
-					functionType.getValue(),
+					this.tokenTypeMapper.get(functionType.getValue()),
 					functionParameters,
 					functionVariables,
 					statements

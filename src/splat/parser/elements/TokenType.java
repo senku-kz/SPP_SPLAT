@@ -4,4 +4,5 @@ public enum TokenType {
     Integer,
     Boolean,
     String,
+    Null,
 }

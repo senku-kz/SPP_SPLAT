@@ -19,11 +19,9 @@ public class StatementExpression extends Statement {
 
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
-//        TokenType leftType = this.node_left.;
         TokenType leftNodeType = null;
         TokenType rightNodeType = null;
 
-        System.out.println("qqq");
         if (this.node_left instanceof LabelNode) {
             LabelNode leftNode = (LabelNode)this.node_left;
             leftNodeType = varAndParamMap.get(leftNode.getLabel());

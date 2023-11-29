@@ -5,6 +5,7 @@ import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
+import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,14 @@ public class StatementFunctionCall extends Statement {
 
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) {
+        TokenType functionReturnType = varAndParamMap.get(this.functionName.toString());
 
+        FunctionDecl functionDecl = funcMap.get(this.functionName.toString());
+
+
+//        if (!leftNodeType.equals(rightNodeType)) {
+//            throw new SemanticAnalysisException("Type mismatch between left and right StatementExpression", this.node_left);
+//        }
     }
 
     public ASTElement getFunctionName() {

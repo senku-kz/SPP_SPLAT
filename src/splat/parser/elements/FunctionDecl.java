@@ -8,7 +8,7 @@ public class FunctionDecl extends Declaration {
 	// Need to add some fields
 	private final String name;
 
-	private final String type;
+	private final TokenType type;
 
 	private final List<Declaration> parameters;
 
@@ -19,7 +19,7 @@ public class FunctionDecl extends Declaration {
 	// Need to add extra arguments for setting fields in the constructor
 	public FunctionDecl(Token token,
 						String name,
-						String type,
+						TokenType type,
 						List<Declaration> parameters,
 						List<Declaration> variables,
 						List<Statement> statements
@@ -37,6 +37,10 @@ public class FunctionDecl extends Declaration {
 	// Fix this as well
 	public String toString() {
 		return this.name;
+	}
+
+	public TokenType getType() {
+		return type;
 	}
 
 	public List<Statement> getStmts() {
