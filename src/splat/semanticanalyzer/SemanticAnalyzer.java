@@ -119,7 +119,7 @@ public class SemanticAnalyzer {
 		for (Declaration functionParameterDecl : funcDecl.getParameters()) {
 			label = functionParameterDecl.getLabel().toString();
 
-			if (labels.contains(label)) {
+			if (labels.contains(label) || this.funcMap.containsKey(label)) {
 				throw new SemanticAnalysisException("Cannot have duplicate label '"
 						+ label + "' in function parameters", functionParameterDecl);
 			} else {
@@ -131,9 +131,9 @@ public class SemanticAnalyzer {
 		for (Declaration functionVariableDecl : funcDecl.getVariables()) {
 			label = functionVariableDecl.getLabel().toString();
 
-			if (labels.contains(label)) {
+			if (labels.contains(label) || this.funcMap.containsKey(label)) {
 				throw new SemanticAnalysisException("Cannot have duplicate label '"
-						+ label + "' in function parameters", functionVariableDecl);
+						+ label + "' in function variables", functionVariableDecl);
 			} else {
 				labels.add(label);
 			}
