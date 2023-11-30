@@ -5,11 +5,6 @@ import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
-import splat.parser.expressions.BinaryExpression;
-import splat.parser.nodes.BooleanNode;
-import splat.parser.nodes.NumberNode;
-import splat.parser.nodes.StringNode;
-import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;

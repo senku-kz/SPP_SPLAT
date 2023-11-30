@@ -27,7 +27,7 @@ public abstract class ASTElement {
 		return column;
 	}
 
-	protected TokenType getType(ASTElement node, Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
+	public TokenType getType(ASTElement node, Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
 		TokenType nodeType = null;
 
 		if (node instanceof BinaryExpression){

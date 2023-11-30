@@ -1,17 +1,13 @@
 package splat.semanticanalyzer;
 
+import splat.parser.elements.*;
+import splat.parser.statements.StatementReturn;
+import splat.parser.statements.StatementReturnValue;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import splat.parser.elements.*;
-import splat.parser.nodes.BooleanNode;
-import splat.parser.nodes.NumberNode;
-import splat.parser.nodes.StringNode;
-import splat.parser.nodes.VariableNode;
-import splat.parser.statements.StatementReturn;
-import splat.parser.statements.StatementReturnValue;
 
 public class SemanticAnalyzer {
 
@@ -65,17 +61,7 @@ public class SemanticAnalyzer {
 				}
 			} else if (stmt instanceof StatementReturnValue) {
 				StatementReturnValue returnValue = (StatementReturnValue) stmt;
-				if (returnValue.getValue() instanceof VariableNode) {
-					VariableNode vn = (VariableNode) returnValue.getValue();
-					returnValueType = varAndParamMap.get(vn.getValue());
-				} else if (returnValue.getValue() instanceof NumberNode) {
-					returnValueType = TokenType.Integer;
-				} else if (returnValue.getValue() instanceof BooleanNode) {
-					returnValueType = TokenType.Boolean;
-				} else if (returnValue.getValue() instanceof StringNode) {
-					returnValueType = TokenType.String;
-				}
-
+				returnValueType = returnValue.getType(returnValue.getValue(), funcMap, varAndParamMap);
 
 			}
 			stmt.analyze(funcMap, varAndParamMap);
