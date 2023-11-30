@@ -22,8 +22,6 @@ public class StatementFunctionCall extends Statement {
 
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
-        TokenType vnType = null;
-
         LabelNode functionName = (LabelNode)this.functionName;
 
         if (funcMap.get(functionName.getLabel()) == null){
@@ -42,13 +40,7 @@ public class StatementFunctionCall extends Statement {
             TokenType vdType = vd.getType();
 
             ASTElement vn = functionCallParameters.get(i);
-            if (vn instanceof VariableNode) {
-                VariableNode vn2 = (VariableNode) vn;
-                vnType = varAndParamMap.get(vn2.getValue());
-            } else if (vn instanceof BinaryExpression) {
-                BinaryExpression vn2 = (BinaryExpression) vn;
-                vnType = vn2.analyzeAndGetType(funcMap, varAndParamMap);
-            }
+            TokenType vnType = this.getType(vn, funcMap, varAndParamMap);
 
             if (!vdType.equals(vnType)){
                 throw new SemanticAnalysisException("Parameters type do not match.", this.functionName);
