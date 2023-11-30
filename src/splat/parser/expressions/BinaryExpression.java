@@ -38,7 +38,7 @@ public class BinaryExpression extends Expression {
             ){
                 return TokenType.Boolean;
             } else {
-                if (TokenType.Integer.equals(leftNodeType)) {
+                if (TokenType.Integer.equals(leftNodeType) || TokenType.Boolean.equals(leftNodeType)) {
                     return leftNodeType;
                 } else {
                     throw new SemanticAnalysisException("Using not Integer type for BinaryExpression.", this.node_left);
