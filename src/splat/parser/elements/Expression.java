@@ -102,18 +102,8 @@ public abstract class Expression extends ASTElement {
 				VariableDecl vd = (VariableDecl)functionVarDecl.get(i);
 				TokenType vdType = vd.getType();
 
-				TokenType vnType = null;
 				ASTElement functionParameter = functionCallParameters.get(i);
-				if (functionParameter instanceof VariableNode) {
-					VariableNode vn = (VariableNode) functionCallParameters.get(i);
-					vnType = varAndParamMap.get(vn.getValue());
-				} else if (functionParameter instanceof NumberNode) {
-					vnType = TokenType.Integer;
-				} else if (functionParameter instanceof BooleanNode) {
-					vnType = TokenType.Boolean;
-				} else if (functionParameter instanceof StringNode) {
-					vnType = TokenType.String;
-				}
+				TokenType vnType = this.getType(functionParameter, funcMap, varAndParamMap);
 
 				if (!vdType.equals(vnType)){
 					throw new SemanticAnalysisException("Parameters type do not match", node);

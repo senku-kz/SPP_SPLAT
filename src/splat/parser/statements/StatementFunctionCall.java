@@ -51,7 +51,7 @@ public class StatementFunctionCall extends Statement {
             }
 
             if (!vdType.equals(vnType)){
-                throw new SemanticAnalysisException("Parameters type do not match", this.functionName);
+                throw new SemanticAnalysisException("Parameters type do not match.", this.functionName);
             }
         }
     }
