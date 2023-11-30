@@ -62,6 +62,7 @@ public class SemanticAnalyzer {
 					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
 				}
 			}
+			stmt.setMainBody(false);
 			stmt.analyze(funcMap, varAndParamMap);
 		}
 
