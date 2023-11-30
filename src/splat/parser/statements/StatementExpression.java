@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public class StatementExpression extends Statement {
-    private ASTElement node_left;
-    private ASTElement node_right;
+    private final ASTElement node_left;
+    private final ASTElement node_right;
     public StatementExpression(ASTElement node_left, ASTElement node_right) {
         super(new Token("STATEMENT EXPRESSION", "", node_right.getLine(), node_right.getColumn()));
         this.node_left = node_left;
@@ -47,7 +47,7 @@ public class StatementExpression extends Statement {
         } else if (node instanceof LabelNode) {
             nodeType = varAndParamMap.get(((LabelNode) node).getLabel());
             if (nodeType == null){
-                throw new SemanticAnalysisException("Undefined variable", this.node_left);
+                throw new SemanticAnalysisException("Undefined variable", node);
             }
         } else if (node instanceof StatementFunctionCall) {
             StatementFunctionCall functionCall = (StatementFunctionCall) node;
@@ -65,7 +65,7 @@ public class StatementExpression extends Statement {
                 throw new SemanticAnalysisException("Number of parameters do not match", node);
             }
 
-            for (Integer i = 0; i < functionCallParameters.size(); i++ ) {
+            for (int i = 0; i < functionCallParameters.size(); i++ ) {
                 VariableDecl vd = (VariableDecl)functionVarDecl.get(i);
                 TokenType vdType = vd.getType();
 
