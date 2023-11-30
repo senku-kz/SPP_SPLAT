@@ -54,16 +54,28 @@ public class SemanticAnalyzer {
 		// Get the types of the parameters and local variables
 		Map<String, TokenType> varAndParamMap = getVarAndParamMap(funcDecl);
 
+		TokenType functionDeclType = funcDecl.getType();
 		TokenType returnValueType = TokenType.Void;
 		// Perform semantic analysis on the function body
 		for (Statement stmt : funcDecl.getStmts()) {
 			if (stmt instanceof StatementReturn){
-				if (!TokenType.Void.equals(funcDecl.getType())){
+				if (!TokenType.Void.equals(functionDeclType)){
+					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
+				}
+			} else if (stmt instanceof StatementReturnValue) {
+				StatementReturnValue statementReturnValue = (StatementReturnValue) stmt;
+				statementReturnValue.analyze(funcMap, varAndParamMap);
+				returnValueType = statementReturnValue.getReturnedNodeType();
+				if(!returnValueType.equals(functionDeclType)){
 					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
 				}
 			}
 			stmt.setMainBody(false);
 			stmt.analyze(funcMap, varAndParamMap);
+		}
+
+		if (!functionDeclType.equals(returnValueType)){
+			throw new SemanticAnalysisException("Error in returning the type of the declared function.", funcDecl.getLine(),funcDecl.getColumn());
 		}
 
 	}

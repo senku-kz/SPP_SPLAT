@@ -10,7 +10,10 @@ import splat.semanticanalyzer.SemanticAnalysisException;
 import java.util.Map;
 
 public class StatementReturnValue extends Statement {
-    private ASTElement value;
+    private final ASTElement value;
+
+    protected TokenType returnedNodeType = null;
+
     public StatementReturnValue(Token token, ASTElement value) {
         super(token);
         this.value = value;
@@ -23,6 +26,7 @@ public class StatementReturnValue extends Statement {
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
         TokenType nodeType = this.getType(this.value, funcMap, varAndParamMap);
+        this.returnedNodeType = nodeType;
 
         Map.Entry<String, FunctionDecl> firstEntry = funcMap.entrySet().iterator().next();
         String functionName = firstEntry.getKey();
@@ -34,4 +38,7 @@ public class StatementReturnValue extends Statement {
         }
     }
 
+    public TokenType getReturnedNodeType() {
+        return returnedNodeType;
+    }
 }
