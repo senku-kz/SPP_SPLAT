@@ -76,6 +76,7 @@ public class SemanticAnalyzer {
 					returnValueType = TokenType.String;
 				}
 
+
 			}
 			stmt.analyze(funcMap, varAndParamMap);
 		}
