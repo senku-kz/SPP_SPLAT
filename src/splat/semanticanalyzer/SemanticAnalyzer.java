@@ -56,20 +56,13 @@ public class SemanticAnalyzer {
 		// Perform semantic analysis on the function body
 		for (Statement stmt : funcDecl.getStmts()) {
 			if (stmt instanceof StatementReturn){
-				if (!"void".equals(funcDecl.getType().toString())){
+				if (!TokenType.Void.equals(funcDecl.getType())){
 					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
 				}
-			} else if (stmt instanceof StatementReturnValue) {
-				StatementReturnValue returnValue = (StatementReturnValue) stmt;
-				returnValueType = returnValue.getType(returnValue.getValue(), funcMap, varAndParamMap);
-
 			}
 			stmt.analyze(funcMap, varAndParamMap);
 		}
 
-		if (!funcDecl.getType().equals(returnValueType)){
-			throw new SemanticAnalysisException("Error in returning the type of the declared function.", funcDecl);
-		}
 	}
 	
 	

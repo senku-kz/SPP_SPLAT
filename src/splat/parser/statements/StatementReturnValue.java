@@ -26,11 +26,11 @@ public class StatementReturnValue extends Statement {
 
         Map.Entry<String, FunctionDecl> firstEntry = funcMap.entrySet().iterator().next();
         String functionName = firstEntry.getKey();
-        FunctionDecl functionDecl = firstEntry.getValue();
 
-        if (!nodeType.equals(functionDecl.getType())){
-            String msg = String.format("Error in returning the type of the declared function >>>%s<<<. Expected %s, get %s", functionName, functionDecl.getType(), nodeType);
-            throw new SemanticAnalysisException(msg, functionDecl);
+        TokenType functionType = firstEntry.getValue().getType();
+        if (!nodeType.equals(functionType)){
+            String msg = String.format("Error in returning the type of the declared function >>>%s<<<. Expected %s, get %s", functionName, functionType, nodeType);
+            throw new SemanticAnalysisException(msg, firstEntry.getValue());
         }
     }
 
