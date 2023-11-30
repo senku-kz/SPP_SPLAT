@@ -28,18 +28,6 @@ public class StatementReturnValue extends Statement {
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
         TokenType nodeType = this.getType(this.value, funcMap, varAndParamMap);
-//        TokenType nodeType = null;
-//        if (this.value instanceof NumberNode) {
-//            nodeType = TokenType.Integer;
-//        } else if (this.value instanceof BooleanNode) {
-//            nodeType = TokenType.Boolean;
-//        } else if (this.value instanceof StringNode){
-//            nodeType = TokenType.String;
-//        } else if (this.value instanceof BinaryExpression) {
-//            nodeType = ((BinaryExpression) this.value).analyzeAndGetType(funcMap, varAndParamMap);
-//        } else if (this.value instanceof VariableNode) {
-//            nodeType = varAndParamMap.get(((VariableNode) this.value).getValue());
-//        }
 
         Map.Entry<String, FunctionDecl> firstEntry = funcMap.entrySet().iterator().next();
         String functionName = firstEntry.getKey();
