@@ -49,6 +49,11 @@ public class StatementExpression extends Statement {
             if (nodeType == null){
                 throw new SemanticAnalysisException("Undefined variable", node);
             }
+        } else if (node instanceof VariableNode) {
+            nodeType = varAndParamMap.get(((VariableNode) node).getValue());
+            if (nodeType == null){
+                throw new SemanticAnalysisException("Undefined variable", node);
+            }
         } else if (node instanceof StatementFunctionCall) {
             StatementFunctionCall functionCall = (StatementFunctionCall) node;
 

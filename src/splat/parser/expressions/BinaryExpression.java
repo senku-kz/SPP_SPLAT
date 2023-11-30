@@ -5,8 +5,6 @@ import splat.parser.elements.ASTElement;
 import splat.parser.elements.Expression;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.TokenType;
-import splat.parser.nodes.*;
-import splat.parser.statements.StatementFunctionCall;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
@@ -25,50 +23,9 @@ public class BinaryExpression extends Expression {
     @Override
     public TokenType analyzeAndGetType(Map<String, FunctionDecl> funcMap,
                                        Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
-        TokenType leftNodeType = null;
-        TokenType rightNodeType = null;
 
-        if (this.node_left instanceof VariableNode) {
-            VariableNode leftNode = (VariableNode)this.node_left;
-            leftNodeType = varAndParamMap.get(leftNode.getValue());
-            if (leftNodeType == null){
-                String msg = String.format("Undefined variable %s", leftNode.getValue());
-                throw new SemanticAnalysisException(msg, this.node_left);
-            }
-        } else if (this.node_left instanceof StringNode) {
-            leftNodeType = TokenType.String;
-        } else if (this.node_left instanceof NumberNode) {
-            leftNodeType = TokenType.Integer;
-        } else if (this.node_left instanceof BinaryExpression) {
-            leftNodeType = ((BinaryExpression) this.node_left).analyzeAndGetType(funcMap, varAndParamMap);
-        } else if (this.node_left instanceof BooleanNode) {
-            leftNodeType = TokenType.Boolean;
-        } else if (this.node_left instanceof StatementFunctionCall) {
-            StatementFunctionCall node = (StatementFunctionCall) this.node_left;
-            String functionName = ((LabelNode)node.getFunctionName()).getLabel();
-            leftNodeType = funcMap.get(functionName).getType();
-        }
-
-        if (this.node_right instanceof VariableNode) {
-            VariableNode rightNode = (VariableNode)this.node_right;
-            rightNodeType = varAndParamMap.get(rightNode.getValue());
-            if (rightNodeType == null){
-                String msg = String.format("Undefined variable %s", rightNode.getValue());
-                throw new SemanticAnalysisException(msg, this.node_right);
-            }
-        } else if (this.node_right instanceof StringNode) {
-            rightNodeType = TokenType.String;
-        } else if (this.node_right instanceof NumberNode) {
-            rightNodeType = TokenType.Integer;
-        } else if (this.node_right instanceof BinaryExpression) {
-            rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
-        } else if (this.node_right instanceof BooleanNode) {
-            rightNodeType = TokenType.Boolean;
-        } else if (this.node_right instanceof StatementFunctionCall) {
-            StatementFunctionCall node = (StatementFunctionCall) this.node_right;
-            String functionName = ((LabelNode)node.getFunctionName()).getLabel();
-            rightNodeType = funcMap.get(functionName).getType();
-        }
+        TokenType leftNodeType = this.getType(this.node_left, funcMap, varAndParamMap);
+        TokenType rightNodeType = this.getType(this.node_right, funcMap, varAndParamMap);
 
         if (leftNodeType.equals(rightNodeType)){
             if (
