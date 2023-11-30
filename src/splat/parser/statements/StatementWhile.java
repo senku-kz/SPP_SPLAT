@@ -22,13 +22,9 @@ public class StatementWhile extends Statement {
 
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
-        if (this.expression instanceof BinaryExpression){
-            BinaryExpression expr = (BinaryExpression) this.expression;
-            expr.analyzeAndGetType(funcMap, varAndParamMap);
-        } else if (this.expression instanceof BooleanNode) {
-
-        } else {
-            throw new SemanticAnalysisException("Unexpected expression in while", this.expression);
+        TokenType expressionType = this.getType(this.expression, funcMap, varAndParamMap);
+        if (!TokenType.Boolean.equals(expressionType)){
+            throw new SemanticAnalysisException("Unexpected expression in while.", this.expression);
         }
 
         for (Statement stmt : this.statements){
