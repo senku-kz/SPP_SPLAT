@@ -17,4 +17,7 @@ public enum ArithmeticOperators {
     NotEqualTo,
     LogicalAnd,
     LogicalOr,
+
+    LogicalNOT,
+    UnaryMinus,
 }

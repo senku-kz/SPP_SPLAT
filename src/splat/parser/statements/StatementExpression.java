@@ -3,6 +3,7 @@ package splat.parser.statements;
 import splat.lexer.Token;
 import splat.parser.elements.*;
 import splat.parser.expressions.BinaryExpression;
+import splat.parser.expressions.UnaryExpression;
 import splat.parser.nodes.*;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
@@ -20,53 +21,48 @@ public class StatementExpression extends Statement {
 
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
-        TokenType leftNodeType = null;
-        TokenType rightNodeType = null;
+        TokenType leftNodeType = this.getType(this.node_left, funcMap, varAndParamMap);
+        TokenType rightNodeType = this.getType(this.node_right, funcMap, varAndParamMap);
 
-        if (this.node_left instanceof LabelNode) {
-            LabelNode leftNode = (LabelNode)this.node_left;
-            leftNodeType = varAndParamMap.get(leftNode.getLabel());
-            if (leftNodeType == null){
+        if (!leftNodeType.equals(rightNodeType)) {
+            throw new SemanticAnalysisException("Type mismatch between left and right StatementExpression", this.node_left);
+        }
+    }
+
+    private TokenType getType(ASTElement node, Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
+        TokenType nodeType = null;
+        if (node instanceof BinaryExpression){
+            nodeType = ((BinaryExpression) node).analyzeAndGetType(funcMap, varAndParamMap);
+            if (nodeType == null){
+                throw new SemanticAnalysisException("Undefined variable", node);
+            }
+        } else if (node instanceof UnaryExpression) {
+            nodeType = ((UnaryExpression) node).analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (node instanceof StringNode) {
+            nodeType = TokenType.String;
+        } else if (node instanceof NumberNode) {
+            nodeType = TokenType.Integer;
+        } else if (node instanceof BooleanNode) {
+            nodeType = TokenType.Boolean;
+        } else if (node instanceof LabelNode) {
+            nodeType = varAndParamMap.get(((LabelNode) node).getLabel());
+            if (nodeType == null){
                 throw new SemanticAnalysisException("Undefined variable", this.node_left);
             }
-        } else if (this.node_left instanceof StringNode) {
-            leftNodeType = TokenType.String;
-        } else if (this.node_left instanceof NumberNode) {
-            leftNodeType = TokenType.Integer;
-        } else if (this.node_left instanceof BinaryExpression) {
-            leftNodeType = ((BinaryExpression) this.node_left).analyzeAndGetType(funcMap, varAndParamMap);
-        } else if (this.node_left instanceof BooleanNode) {
-            leftNodeType = TokenType.Boolean;
-        }
-
-        if (this.node_right instanceof BinaryExpression){
-            BinaryExpression rightNode = (BinaryExpression) this.node_right;
-            rightNodeType = rightNode.analyzeAndGetType(funcMap, varAndParamMap);
-            if (rightNodeType == null){
-                throw new SemanticAnalysisException("Undefined variable", this.node_right);
-            }
-        } else if (this.node_right instanceof StringNode) {
-            rightNodeType = TokenType.String;
-        } else if (this.node_right instanceof NumberNode) {
-            rightNodeType = TokenType.Integer;
-        } else if (this.node_right instanceof BinaryExpression) {
-            rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
-        } else if (this.node_right instanceof BooleanNode) {
-            rightNodeType = TokenType.Boolean;
-        } else if (this.node_right instanceof StatementFunctionCall) {
-            StatementFunctionCall functionCall = (StatementFunctionCall) this.node_right;
+        } else if (node instanceof StatementFunctionCall) {
+            StatementFunctionCall functionCall = (StatementFunctionCall) node;
 
             if (funcMap.get(((LabelNode) functionCall.getFunctionName()).getLabel()) == null){
-                throw new SemanticAnalysisException("Called function not declared.", this.node_right);
+                throw new SemanticAnalysisException("Called function not declared.", node);
             }
 
-            rightNodeType = funcMap.get(((LabelNode) functionCall.getFunctionName()).getLabel()).getType();
+            nodeType = funcMap.get(((LabelNode) functionCall.getFunctionName()).getLabel()).getType();
 
             List<Declaration> functionVarDecl = funcMap.get(((LabelNode) functionCall.getFunctionName()).getLabel()).getParameters();
             List<ASTElement> functionCallParameters = functionCall.getArguments();
 
             if (functionVarDecl.size() != functionCallParameters.size()){
-                throw new SemanticAnalysisException("Number of parameters do not match", this.node_right);
+                throw new SemanticAnalysisException("Number of parameters do not match", node);
             }
 
             for (Integer i = 0; i < functionCallParameters.size(); i++ ) {
@@ -87,13 +83,10 @@ public class StatementExpression extends Statement {
                 }
 
                 if (!vdType.equals(vnType)){
-                    throw new SemanticAnalysisException("Parameters type do not match", this.node_right);
+                    throw new SemanticAnalysisException("Parameters type do not match", node);
                 }
             }
         }
-
-        if (!leftNodeType.equals(rightNodeType)) {
-            throw new SemanticAnalysisException("Type mismatch between left and right StatementExpression", this.node_left);
-        }
+        return nodeType;
     }
 }

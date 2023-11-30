@@ -8,6 +8,7 @@ import splat.lexer.Token;
 import splat.parser.elements.*;
 import splat.parser.expressions.ArithmeticOperators;
 import splat.parser.expressions.BinaryExpression;
+import splat.parser.expressions.UnaryExpression;
 import splat.parser.nodes.*;
 import splat.parser.statements.*;
 
@@ -442,7 +443,8 @@ public class Parser {
 			return new PlusNode(this.factor());
 		} else if ("-".equals(this.currentToken.getValue())) {
 			this.checkNext("-");
-			return new MinusNode(this.factor());
+//			return new MinusNode(this.factor());
+			return new UnaryExpression(ArithmeticOperators.UnaryMinus, this.factor());
 		} else if ("STRING".equals(this.currentToken.getType())) {
 			this.eat();
 			return new StringNode(token);
