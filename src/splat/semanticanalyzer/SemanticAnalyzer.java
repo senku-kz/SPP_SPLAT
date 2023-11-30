@@ -35,9 +35,11 @@ public class SemanticAnalyzer {
 		for (FunctionDecl funcDecl : funcMap.values()) {
 			analyzeFuncDecl(funcDecl);
 		}
-		
+
+
 		// Perform semantic analysis on the program body
 		for (Statement stmt : progAST.getStmts()) {
+			stmt.setMainBody(true);
 			stmt.analyze(funcMap, progVarMap);
 		}
 		

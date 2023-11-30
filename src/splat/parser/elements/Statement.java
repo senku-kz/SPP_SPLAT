@@ -8,6 +8,7 @@ import splat.semanticanalyzer.SemanticAnalysisException;
 import java.util.Map;
 
 public abstract class Statement extends ASTElement {
+	protected static Boolean isMainBody = false;
 	public Statement(Token token) {
 		super(token);
 	}
@@ -38,5 +39,13 @@ public abstract class Statement extends ASTElement {
 	 */
 //	 public abstract void execute(Map<String, FunctionDecl> funcMap,
 //	                              Map<String, Value> varAndParamMap) 
-//										throws ReturnFromCall;   
+//										throws ReturnFromCall;
+
+	public Boolean getMainBody() {
+		return isMainBody;
+	}
+
+	public void setMainBody(Boolean mainBody) {
+		isMainBody = mainBody;
+	}
 }
