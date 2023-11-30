@@ -6,6 +6,7 @@ import splat.parser.elements.Expression;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.TokenType;
 import splat.parser.nodes.*;
+import splat.parser.statements.StatementFunctionCall;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
@@ -37,23 +38,15 @@ public class BinaryExpression extends Expression {
         } else if (this.node_left instanceof StringNode) {
             leftNodeType = TokenType.String;
         } else if (this.node_left instanceof NumberNode) {
-            if (
-                    ArithmeticOperators.GreaterThan.equals(this.operator)
-                            || ArithmeticOperators.LessThan.equals(this.operator)
-                            || ArithmeticOperators.GreaterThanOrEqualTo.equals(this.operator)
-                            || ArithmeticOperators.LessThanOrEqualTo.equals(this.operator)
-                            || ArithmeticOperators.EqualTo.equals(this.operator)
-                            || ArithmeticOperators.NotEqualTo.equals(this.operator)
-            ){
-                leftNodeType = TokenType.Boolean;
-            } else {
-                leftNodeType = TokenType.Integer;
-            }
-//            leftNodeType = TokenType.Integer;
+            leftNodeType = TokenType.Integer;
         } else if (this.node_left instanceof BinaryExpression) {
             leftNodeType = ((BinaryExpression) this.node_left).analyzeAndGetType(funcMap, varAndParamMap);
         } else if (this.node_left instanceof BooleanNode) {
             leftNodeType = TokenType.Boolean;
+        } else if (this.node_left instanceof StatementFunctionCall) {
+            StatementFunctionCall node = (StatementFunctionCall) this.node_left;
+            String functionName = ((LabelNode)node.getFunctionName()).getLabel();
+            leftNodeType = funcMap.get(functionName).getType();
         }
 
         if (this.node_right instanceof VariableNode) {
@@ -66,6 +59,18 @@ public class BinaryExpression extends Expression {
         } else if (this.node_right instanceof StringNode) {
             rightNodeType = TokenType.String;
         } else if (this.node_right instanceof NumberNode) {
+            rightNodeType = TokenType.Integer;
+        } else if (this.node_right instanceof BinaryExpression) {
+            rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
+        } else if (this.node_right instanceof BooleanNode) {
+            rightNodeType = TokenType.Boolean;
+        } else if (this.node_right instanceof StatementFunctionCall) {
+            StatementFunctionCall node = (StatementFunctionCall) this.node_right;
+            String functionName = ((LabelNode)node.getFunctionName()).getLabel();
+            rightNodeType = funcMap.get(functionName).getType();
+        }
+
+        if (leftNodeType.equals(rightNodeType)){
             if (
                     ArithmeticOperators.GreaterThan.equals(this.operator)
                             || ArithmeticOperators.LessThan.equals(this.operator)
@@ -74,19 +79,10 @@ public class BinaryExpression extends Expression {
                             || ArithmeticOperators.EqualTo.equals(this.operator)
                             || ArithmeticOperators.NotEqualTo.equals(this.operator)
             ){
-                rightNodeType = TokenType.Boolean;
+                return TokenType.Boolean;
             } else {
-                rightNodeType = TokenType.Integer;
+                return leftNodeType;
             }
-//            rightNodeType = TokenType.Integer;
-        } else if (this.node_right instanceof BinaryExpression) {
-            rightNodeType = ((BinaryExpression) this.node_right).analyzeAndGetType(funcMap, varAndParamMap);
-        } else if (this.node_right instanceof BooleanNode) {
-            rightNodeType = TokenType.Boolean;
-        }
-
-        if (leftNodeType.equals(rightNodeType)){
-            return leftNodeType;
         } else {
             throw new SemanticAnalysisException("Type mismatch between left and right BinaryExpression", this.node_left);
         }

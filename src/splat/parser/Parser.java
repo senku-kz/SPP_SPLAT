@@ -345,6 +345,7 @@ public class Parser {
 	}
 
 	private ASTElement expression() throws ParseException {
+//		this.checkNext("(");
 		ASTElement result = this.term();
 		while (!this.peekNext(";")){
 			if ("ADDITIVE_OPERATOR".equals(this.currentToken.getType())){
@@ -394,11 +395,6 @@ public class Parser {
 			} else if ("IDENTIFIER".equals(this.currentToken.getType())) {
 				result = new VariableNode(this.currentToken);
 				eat();
-//			} else if ("STRING".equals(this.currentToken.getType())) {
-//				result = new StringNode(this.currentToken);
-//				Token token = this.currentToken;
-//				eat();
-//				return new StringNode(token);
 			} else {
 				break;
 			}
