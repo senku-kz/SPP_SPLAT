@@ -9,4 +9,8 @@ public class BooleanNode extends ASTElement {
         super(token);
         this.value = "true".equals(token.getValue());
     }
+
+    public boolean isValue() {
+        return value;
+    }
 }

@@ -10,4 +10,13 @@ public class ValueBoolean extends Value {
         this.value = value;
         this.tokenType = TokenType.Boolean;
     }
+
+    public Boolean getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return this.value.toString();
+    }
 }

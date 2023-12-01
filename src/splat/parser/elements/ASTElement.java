@@ -1,5 +1,9 @@
 package splat.parser.elements;
 
+import splat.executor.Value;
+import splat.executor.values.ValueBoolean;
+import splat.executor.values.ValueInteger;
+import splat.executor.values.ValueString;
 import splat.lexer.Token;
 import splat.parser.expressions.BinaryExpression;
 import splat.parser.expressions.UnaryExpression;
@@ -84,4 +88,24 @@ public abstract class ASTElement {
 		return nodeType;
 	}
 
+	public Value getValue(ASTElement node, Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap){
+		Value nodeValue = null;
+
+		if (node instanceof BinaryExpression){
+			nodeValue = ((BinaryExpression) node).evaluate(funcMap, varAndParamMap);
+		} else if (node instanceof UnaryExpression) {
+			nodeValue = ((UnaryExpression) node).evaluate(funcMap, varAndParamMap);
+		} else if (node instanceof StringNode) {
+			nodeValue = new ValueString(((StringNode) node).getStringValue());
+		} else if (node instanceof NumberNode) {
+			nodeValue = new ValueInteger(((NumberNode) node).getIntegerValue());
+		} else if (node instanceof BooleanNode) {
+			nodeValue = new ValueBoolean(((BooleanNode) node).isValue());
+		} else if (node instanceof VariableNode) {
+			String variableName = ((VariableNode) node).getValue();
+			nodeValue = varAndParamMap.get(variableName);
+		}
+
+		return nodeValue;
+	}
 }

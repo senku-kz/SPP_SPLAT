@@ -52,7 +52,10 @@ public class StatementFunctionCall extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-
+//        System.out.println("Execute function");
+        for (Statement stmt : funcMap.get(((LabelNode)this.functionName).getLabel()).getStmts()){
+            stmt.execute(funcMap, varAndParamMap);
+        }
     }
 
     public ASTElement getFunctionName() {

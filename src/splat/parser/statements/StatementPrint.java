@@ -44,7 +44,18 @@ public class StatementPrint extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-
+//        System.out.println("execute print");
+        if (this.printValue instanceof StringNode) {
+            String string = ((StringNode) this.printValue).getStringValue();
+            System.out.print(string.substring(1, string.length() - 1));
+        } else if (this.printValue instanceof NumberNode) {
+            System.out.print(((NumberNode) this.printValue).getIntegerValue());
+        } else if (this.printValue instanceof BooleanNode) {
+            System.out.print(((BooleanNode) this.printValue).isValue());
+        } else if (this.printValue instanceof BinaryExpression) {
+            Value value = ((BinaryExpression)this.printValue).evaluate(funcMap, varAndParamMap);
+            System.out.print(value);
+        }
     }
 
     public void setPrintValue(ASTElement printValue) {

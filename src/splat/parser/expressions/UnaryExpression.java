@@ -1,5 +1,6 @@
 package splat.parser.expressions;
 
+import splat.executor.Value;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.Expression;
@@ -42,6 +43,11 @@ public class UnaryExpression extends Expression {
         }
 
         return this.getType(this.node, funcMap, varAndParamMap);
+    }
+
+    @Override
+    public Value evaluate(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) {
+        return null;
     }
 
 }

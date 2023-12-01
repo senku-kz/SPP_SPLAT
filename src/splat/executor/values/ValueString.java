@@ -10,4 +10,9 @@ public class ValueString extends Value {
         this.value = value;
         this.tokenType = TokenType.String;
     }
+
+    @Override
+    public String toString() {
+        return this.value;
+    }
 }

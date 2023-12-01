@@ -52,13 +52,15 @@ public class  SplatTester {
 
 		System.out.println("success");
 
-		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith(".splat"));
+//		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith(".splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("goodexecution.splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("o_05_goodexecution.splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("999_03_badsemantics.splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("bt_02_badsemantics.splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("my_1a_badsemantics.splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("013_01_goodexecution.splat"));
+//		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("bt_01_goodexecution.splat"));
+		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("AAA_00_goodexecution.splat"));
 
 		totalTests = testFiles.length;
 		System.out.println("Number of tests found: " + totalTests);

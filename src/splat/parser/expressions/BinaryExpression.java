@@ -1,5 +1,7 @@
 package splat.parser.expressions;
 
+import splat.executor.Value;
+import splat.executor.values.ValueInteger;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.Expression;
@@ -49,6 +51,32 @@ public class BinaryExpression extends Expression {
             throw new SemanticAnalysisException("Type mismatch between left and right BinaryExpression", this.node_left);
         }
 
+    }
+
+    @Override
+    public Value evaluate(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) {
+        Value valueLeft = this.getValue(this.node_left, funcMap, varAndParamMap);
+        Value valueRight = this.getValue(this.node_right, funcMap, varAndParamMap);
+        Value valueResult = null;
+
+        if (ArithmeticOperators.Addition.equals(this.operator)){
+            Integer t = ((ValueInteger)valueLeft).getValue() + ((ValueInteger)valueRight).getValue();
+            valueResult = new ValueInteger(t);
+        } else if (ArithmeticOperators.Subtraction.equals(this.operator)) {
+            Integer t = ((ValueInteger)valueLeft).getValue() - ((ValueInteger)valueRight).getValue();
+            valueResult = new ValueInteger(t);
+        } else if (ArithmeticOperators.Multiplication.equals(this.operator)) {
+            Integer t = ((ValueInteger)valueLeft).getValue() * ((ValueInteger)valueRight).getValue();
+            valueResult = new ValueInteger(t);
+        } else if (ArithmeticOperators.Subtraction.equals(this.operator)) {
+            Integer t = ((ValueInteger)valueLeft).getValue() / ((ValueInteger)valueRight).getValue();
+            valueResult = new ValueInteger(t);
+        } else if (ArithmeticOperators.Modulus.equals(this.operator)) {
+            Integer t = ((ValueInteger)valueLeft).getValue() % ((ValueInteger)valueRight).getValue();
+            valueResult = new ValueInteger(t);
+        }
+
+        return valueResult;
     }
 
     @Override

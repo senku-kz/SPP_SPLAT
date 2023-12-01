@@ -24,6 +24,6 @@ public class StatementReturn extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-
+        System.out.println("execute return");
     }
 }

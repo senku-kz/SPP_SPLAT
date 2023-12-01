@@ -2,11 +2,14 @@ package splat.parser.statements;
 
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
+import splat.executor.values.ValueBoolean;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
+import splat.parser.expressions.BinaryExpression;
+import splat.parser.expressions.UnaryExpression;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.ArrayList;
@@ -39,7 +42,24 @@ public class StatementIfElse extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+        System.out.println("Execute if-then-else");
+        Value value = null;
 
+        if (this.expression instanceof BinaryExpression){
+            value = ((BinaryExpression) this.expression).evaluate(funcMap, varAndParamMap);
+        } else if (this.expression instanceof UnaryExpression){
+            value = ((UnaryExpression)this.expression).evaluate(funcMap, varAndParamMap);
+        }
+
+        if (((ValueBoolean)value).getValue()){
+            for (Statement stmt: this.thanStatement) {
+                stmt.execute(funcMap, varAndParamMap);
+            }
+        } else {
+            for (Statement stmt: this.elseStatement) {
+                stmt.execute(funcMap, varAndParamMap);
+            }
+        }
     }
 
     public ASTElement getExpression() {

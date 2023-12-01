@@ -34,6 +34,7 @@ public class StatementWhile extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+        System.out.println("execute while+");
         for (Statement stmt : this.statements){
             stmt.execute(funcMap, varAndParamMap);
         }

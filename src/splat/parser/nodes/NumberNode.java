@@ -4,10 +4,14 @@ import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 
 public class NumberNode extends ASTElement {
-    protected float value;
+    protected Integer value;
 
     public NumberNode(Token token) {
         super(token);
-        this.value = Float.parseFloat(token.getValue());
+        this.value = Integer.valueOf(token.getValue());
+    }
+
+    public Integer getIntegerValue() {
+        return value;
     }
 }

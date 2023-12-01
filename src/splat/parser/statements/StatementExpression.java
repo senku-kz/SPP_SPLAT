@@ -2,11 +2,18 @@ package splat.parser.statements;
 
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
+import splat.executor.values.ValueBoolean;
+import splat.executor.values.ValueInteger;
+import splat.executor.values.ValueString;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
+import splat.parser.nodes.BooleanNode;
+import splat.parser.nodes.LabelNode;
+import splat.parser.nodes.NumberNode;
+import splat.parser.nodes.StringNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
@@ -32,7 +39,21 @@ public class StatementExpression extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-        System.out.println("StatementExpression");
+//        System.out.println("StatementExpression");
+        if (this.node_left instanceof LabelNode){
+            String labelLeft = ((LabelNode) this.node_left).getLabel();
+            Value rightValue = null;
+
+            if (this.node_right instanceof NumberNode) {
+                rightValue = new ValueInteger(((NumberNode) this.node_right).getIntegerValue());
+            } else if (this.node_right instanceof StringNode) {
+                rightValue = new ValueString(((StringNode) this.node_right).getStringValue());
+            } else if (this.node_right instanceof BooleanNode) {
+                rightValue = new ValueBoolean(((BooleanNode)this.node_right).isValue());
+            }
+
+            varAndParamMap.put(labelLeft, rightValue);
+        }
     }
 
 }
