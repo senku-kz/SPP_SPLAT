@@ -1,5 +1,7 @@
 package splat.parser.statements;
 
+import splat.executor.ReturnFromCall;
+import splat.executor.Value;
 import splat.lexer.Token;
 import splat.parser.elements.*;
 import splat.parser.expressions.BinaryExpression;
@@ -46,6 +48,11 @@ public class StatementFunctionCall extends Statement {
                 throw new SemanticAnalysisException("Parameters type do not match.", this.functionName);
             }
         }
+    }
+
+    @Override
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+
     }
 
     public ASTElement getFunctionName() {

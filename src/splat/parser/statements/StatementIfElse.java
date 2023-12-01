@@ -1,5 +1,7 @@
 package splat.parser.statements;
 
+import splat.executor.ReturnFromCall;
+import splat.executor.Value;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
@@ -33,6 +35,11 @@ public class StatementIfElse extends Statement {
         for (Statement stmt : this.elseStatement){
             stmt.analyze(funcMap, varAndParamMap);
         }
+    }
+
+    @Override
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+
     }
 
     public ASTElement getExpression() {

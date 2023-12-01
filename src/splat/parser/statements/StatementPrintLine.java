@@ -1,5 +1,7 @@
 package splat.parser.statements;
 
+import splat.executor.ReturnFromCall;
+import splat.executor.Value;
 import splat.lexer.Token;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
@@ -14,6 +16,11 @@ public class StatementPrintLine extends Statement {
 
     @Override
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) {
+
+    }
+
+    @Override
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
 
     }
 }

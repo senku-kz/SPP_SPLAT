@@ -1,5 +1,7 @@
 package splat.parser.statements;
 
+import splat.executor.ReturnFromCall;
+import splat.executor.Value;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
@@ -36,6 +38,11 @@ public class StatementReturnValue extends Statement {
             String msg = String.format("Error in returning the type of the declared function >>>%s<<<. Expected %s, get %s", functionName, functionType, nodeType);
             throw new SemanticAnalysisException(msg, firstEntry.getValue());
         }
+    }
+
+    @Override
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+
     }
 
     public TokenType getReturnedNodeType() {

@@ -1,5 +1,7 @@
 package splat.parser.statements;
 
+import splat.executor.ReturnFromCall;
+import splat.executor.Value;
 import splat.lexer.Token;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
@@ -18,5 +20,10 @@ public class StatementReturn extends Statement {
         if (isMainBody) {
             throw new SemanticAnalysisException("Return function in main body.", this.getLine(), this.getColumn());
         }
+    }
+
+    @Override
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+
     }
 }

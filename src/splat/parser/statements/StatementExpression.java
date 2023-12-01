@@ -1,5 +1,7 @@
 package splat.parser.statements;
 
+import splat.executor.ReturnFromCall;
+import splat.executor.Value;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
@@ -26,6 +28,11 @@ public class StatementExpression extends Statement {
         if (!leftNodeType.equals(rightNodeType)) {
             throw new SemanticAnalysisException("Type mismatch between left and right StatementExpression", this.node_left);
         }
+    }
+
+    @Override
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+        System.out.println("StatementExpression");
     }
 
 }

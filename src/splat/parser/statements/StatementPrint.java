@@ -1,5 +1,7 @@
 package splat.parser.statements;
 
+import splat.executor.ReturnFromCall;
+import splat.executor.Value;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
@@ -38,6 +40,11 @@ public class StatementPrint extends Statement {
 //        if (!TokenType.String.equals(nodeType)){
 //            throw new SemanticAnalysisException("Print value not a String type", this.printValue);
 //        }
+    }
+
+    @Override
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+
     }
 
     public void setPrintValue(ASTElement printValue) {
