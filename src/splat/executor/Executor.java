@@ -59,9 +59,9 @@ public class Executor {
 				VariableDecl varDecl = (VariableDecl) decl;
 
 				if (TokenType.Integer.equals(varDecl.getType())) {
-					varValue = new ValueInteger(Integer.MAX_VALUE);
+					varValue = new ValueInteger(0);
 				} else if (TokenType.Boolean.equals(varDecl.getType())) {
-					varValue = new ValueBoolean(null);
+					varValue = new ValueBoolean(false);
 				} else if (TokenType.String.equals(varDecl.getType()))
 					varValue = new ValueString(null);
 

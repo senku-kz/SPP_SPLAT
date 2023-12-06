@@ -37,17 +37,9 @@ public class StatementWhile extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-//        System.out.println("execute while+");
-        Boolean doWay = null;
-        if (this.expression instanceof BinaryExpression){
-            BinaryExpression t = (BinaryExpression)this.expression;
-            ValueBoolean q = (ValueBoolean)t.evaluate(funcMap, varAndParamMap);
-            doWay = ((ValueBoolean)t.evaluate(funcMap, varAndParamMap)).getValue();
-        } else if (this.expression instanceof UnaryExpression) {
-            UnaryExpression t = (UnaryExpression)this.expression;
-            doWay = ((ValueBoolean)t.evaluate(funcMap, varAndParamMap)).getValue();
-        }
-        if (doWay){
+        Value value = this.getValue(this.expression, funcMap, varAndParamMap);
+
+        if (((ValueBoolean)value).getValue()){
             for (Statement stmt : this.statements){
                 stmt.execute(funcMap, varAndParamMap);
             }

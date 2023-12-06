@@ -435,6 +435,8 @@ public class Parser {
 			this.eat();
 			if ("true".equals(token.getValue()) || "false".equals(token.getValue())){
 				return new BooleanNode(token);
+			} else if ("not".equals(token.getValue())) {
+				return new UnaryExpression(ArithmeticOperators.LogicalNOT, this.factor());
 			} else {
 				return new VariableNode(token);
 			}
