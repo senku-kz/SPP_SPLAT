@@ -2,6 +2,9 @@ package splat.parser.statements;
 
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
+import splat.executor.values.ValueBoolean;
+import splat.executor.values.ValueInteger;
+import splat.executor.values.ValueString;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
@@ -45,13 +48,23 @@ public class StatementPrint extends Statement {
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
 //        System.out.println("execute print");
-        if (this.printValue instanceof StringNode) {
-            String string = ((StringNode) this.printValue).getStringValue();
-            System.out.print(string.substring(1, string.length() - 1));
+        if (this.printValue instanceof BooleanNode) {
+            System.out.print(((BooleanNode) this.printValue).isValue());
         } else if (this.printValue instanceof NumberNode) {
             System.out.print(((NumberNode) this.printValue).getIntegerValue());
-        } else if (this.printValue instanceof BooleanNode) {
-            System.out.print(((BooleanNode) this.printValue).isValue());
+        } else  if (this.printValue instanceof StringNode) {
+            String string = ((StringNode) this.printValue).getStringValue();
+            System.out.print(string.substring(1, string.length() - 1));
+        } else if (this.printValue instanceof VariableNode) {
+            String varName = ((VariableNode) this.printValue).getValue();
+            Value varValue = varAndParamMap.get(varName);
+            if (varValue instanceof ValueBoolean){
+                System.out.print(((ValueBoolean) varValue).getValue());
+            } else if (varValue instanceof ValueInteger) {
+                System.out.print(((ValueInteger) varValue).getValue());
+            } else if (varValue instanceof ValueString) {
+                System.out.print(((ValueString) varValue).getValue());
+            }
         } else if (this.printValue instanceof BinaryExpression) {
             Value value = ((BinaryExpression)this.printValue).evaluate(funcMap, varAndParamMap);
             System.out.print(value);

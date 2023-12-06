@@ -1,6 +1,7 @@
 package splat.parser.expressions;
 
 import splat.executor.Value;
+import splat.executor.values.ValueBoolean;
 import splat.executor.values.ValueInteger;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
@@ -68,14 +69,64 @@ public class BinaryExpression extends Expression {
         } else if (ArithmeticOperators.Multiplication.equals(this.operator)) {
             Integer t = ((ValueInteger)valueLeft).getValue() * ((ValueInteger)valueRight).getValue();
             valueResult = new ValueInteger(t);
-        } else if (ArithmeticOperators.Subtraction.equals(this.operator)) {
+        } else if (ArithmeticOperators.Division.equals(this.operator)) {
             Integer t = ((ValueInteger)valueLeft).getValue() / ((ValueInteger)valueRight).getValue();
             valueResult = new ValueInteger(t);
         } else if (ArithmeticOperators.Modulus.equals(this.operator)) {
             Integer t = ((ValueInteger)valueLeft).getValue() % ((ValueInteger)valueRight).getValue();
             valueResult = new ValueInteger(t);
-        }
 
+        } else if (ArithmeticOperators.LessThan.equals(this.operator)) {
+            if (((ValueInteger) valueLeft).getValue() < ((ValueInteger) valueRight).getValue()) {
+                valueResult = new ValueBoolean(true);
+            } else {
+                valueResult = new ValueBoolean(false);
+            }
+        } else if (ArithmeticOperators.GreaterThan.equals(this.operator)) {
+            if (((ValueInteger) valueLeft).getValue() > ((ValueInteger) valueRight).getValue()) {
+                valueResult = new ValueBoolean(true);
+            } else {
+                valueResult = new ValueBoolean(false);
+            }
+        } else if (ArithmeticOperators.LessThanOrEqualTo.equals(this.operator)) {
+            if (((ValueInteger) valueLeft).getValue() <= ((ValueInteger) valueRight).getValue()) {
+                valueResult = new ValueBoolean(true);
+            } else {
+                valueResult = new ValueBoolean(false);
+            }
+        } else if (ArithmeticOperators.GreaterThanOrEqualTo.equals(this.operator)) {
+            if (((ValueInteger) valueLeft).getValue() >= ((ValueInteger) valueRight).getValue()) {
+                valueResult = new ValueBoolean(true);
+            } else {
+                valueResult = new ValueBoolean(false);
+            }
+        } else if (ArithmeticOperators.EqualTo.equals(this.operator)) {
+            if (((ValueInteger) valueLeft).getValue() == ((ValueInteger) valueRight).getValue()) {
+                valueResult = new ValueBoolean(true);
+            } else {
+                valueResult = new ValueBoolean(false);
+            }
+        } else if (ArithmeticOperators.NotEqualTo.equals(this.operator)) {
+            if (((ValueInteger) valueLeft).getValue() != ((ValueInteger) valueRight).getValue()) {
+                valueResult = new ValueBoolean(true);
+            } else {
+                valueResult = new ValueBoolean(false);
+            }
+
+        } else if (ArithmeticOperators.LogicalAnd.equals(this.operator)) {
+            if (((ValueBoolean) valueLeft).getValue() && ((ValueBoolean) valueRight).getValue()) {
+                valueResult = new ValueBoolean(true);
+            } else {
+                valueResult = new ValueBoolean(false);
+            }
+        } else if (ArithmeticOperators.LogicalOr.equals(this.operator)) {
+            if (((ValueBoolean) valueLeft).getValue() || ((ValueBoolean) valueRight).getValue()) {
+                valueResult = new ValueBoolean(true);
+            } else {
+                valueResult = new ValueBoolean(false);
+            }
+
+        }
         return valueResult;
     }
 

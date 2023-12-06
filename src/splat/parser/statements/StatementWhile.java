@@ -2,11 +2,14 @@ package splat.parser.statements;
 
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
+import splat.executor.values.ValueBoolean;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
+import splat.parser.expressions.BinaryExpression;
+import splat.parser.expressions.UnaryExpression;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.List;
@@ -34,9 +37,23 @@ public class StatementWhile extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-        System.out.println("execute while+");
-        for (Statement stmt : this.statements){
-            stmt.execute(funcMap, varAndParamMap);
+//        System.out.println("execute while+");
+        Boolean doWay = null;
+        if (this.expression instanceof BinaryExpression){
+            BinaryExpression t = (BinaryExpression)this.expression;
+            ValueBoolean q = (ValueBoolean)t.evaluate(funcMap, varAndParamMap);
+            doWay = ((ValueBoolean)t.evaluate(funcMap, varAndParamMap)).getValue();
+        } else if (this.expression instanceof UnaryExpression) {
+            UnaryExpression t = (UnaryExpression)this.expression;
+            doWay = ((ValueBoolean)t.evaluate(funcMap, varAndParamMap)).getValue();
+        }
+        if (doWay){
+            for (Statement stmt : this.statements){
+                stmt.execute(funcMap, varAndParamMap);
+            }
+            this.execute(funcMap, varAndParamMap);
+        } else {
+            return;
         }
     }
 
