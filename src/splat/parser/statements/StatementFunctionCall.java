@@ -59,7 +59,7 @@ public class StatementFunctionCall extends Statement {
     }
 
     @Override
-    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap){
         String functionName = ((LabelNode)this.functionName).getLabel();
         List<Declaration> functionParameters = funcMap.get(functionName).getParameters();
         Map<String, Value> functionVarAndParamMap = new HashMap<>();

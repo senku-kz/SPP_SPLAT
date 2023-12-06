@@ -1,5 +1,6 @@
 package splat.parser.elements;
 
+import splat.executor.ReturnFromCall;
 import splat.executor.Value;
 import splat.executor.values.ValueBoolean;
 import splat.executor.values.ValueInteger;
@@ -104,6 +105,9 @@ public abstract class ASTElement {
 		} else if (node instanceof VariableNode) {
 			String variableName = ((VariableNode) node).getValue();
 			nodeValue = varAndParamMap.get(variableName);
+		} else if (node instanceof StatementFunctionCall) {
+			((StatementFunctionCall)node).execute(funcMap, varAndParamMap);
+			nodeValue = ((StatementFunctionCall)node).getReturnValue();
 		}
 
 		return nodeValue;

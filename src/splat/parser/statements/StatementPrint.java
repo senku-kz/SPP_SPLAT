@@ -47,7 +47,6 @@ public class StatementPrint extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-//        System.out.println("execute print");
         if (this.printValue instanceof BooleanNode) {
             System.out.print(((BooleanNode) this.printValue).isValue());
         } else if (this.printValue instanceof NumberNode) {
@@ -58,13 +57,7 @@ public class StatementPrint extends Statement {
         } else if (this.printValue instanceof VariableNode) {
             String varName = ((VariableNode) this.printValue).getValue();
             Value varValue = varAndParamMap.get(varName);
-            if (varValue instanceof ValueBoolean){
-                System.out.print(((ValueBoolean) varValue).getValue());
-            } else if (varValue instanceof ValueInteger) {
-                System.out.print(((ValueInteger) varValue).getValue());
-            } else if (varValue instanceof ValueString) {
-                System.out.print(((ValueString) varValue).getValue());
-            }
+            System.out.print(varValue);
         } else if (this.printValue instanceof BinaryExpression) {
             Value value = ((BinaryExpression)this.printValue).evaluate(funcMap, varAndParamMap);
             System.out.print(value);
@@ -75,6 +68,13 @@ public class StatementPrint extends Statement {
             Value value = ((StatementFunctionCall) this.printValue).returnValue;
             System.out.print(value);
         }
+
+//        if (this.printValue == null){
+//            System.out.println();
+//        } else {
+//            Value v = this.getNodeValue(this.printValue, funcMap, varAndParamMap);
+//            System.out.print(v);
+//        }
     }
 
     public void setPrintValue(ASTElement printValue) {
