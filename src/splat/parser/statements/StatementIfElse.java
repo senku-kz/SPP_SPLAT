@@ -42,7 +42,7 @@ public class StatementIfElse extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-        System.out.println("Execute if-then-else");
+        // System.out.println("Execute if-then-else");
         Value value = null;
 
         if (this.expression instanceof BinaryExpression){
