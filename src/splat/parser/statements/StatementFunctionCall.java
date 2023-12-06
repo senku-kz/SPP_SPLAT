@@ -10,6 +10,7 @@ import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,8 +54,26 @@ public class StatementFunctionCall extends Statement {
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
 //        System.out.println("Execute function");
-        for (Statement stmt : funcMap.get(((LabelNode)this.functionName).getLabel()).getStmts()){
-            stmt.execute(funcMap, varAndParamMap);
+        String functionName = ((LabelNode)this.functionName).getLabel();
+        List<Declaration> functionParameters = funcMap.get(functionName).getParameters();
+        Map<String, Value> functionVarAndParamMap = new HashMap<>();
+
+        for (int i=0; i<this.arguments.size(); i++){
+            String prmName = functionParameters.get(i).getLabel();
+            String argName = ((VariableNode) this.arguments.get(i)).getValue();
+            Value argValue = varAndParamMap.get(argName);
+            functionVarAndParamMap.put(prmName, argValue);
+        }
+
+//        Add function Variables declaration
+//        for ()
+        try {
+            for (Statement stmt : funcMap.get(((LabelNode)this.functionName).getLabel()).getStmts()){
+                stmt.execute(funcMap, functionVarAndParamMap);
+            }
+
+        } catch (ReturnFromCall ex) {
+            // System.out.println(" Function Reterned");
         }
     }
 

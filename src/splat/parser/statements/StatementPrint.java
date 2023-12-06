@@ -68,6 +68,8 @@ public class StatementPrint extends Statement {
         } else if (this.printValue instanceof BinaryExpression) {
             Value value = ((BinaryExpression)this.printValue).evaluate(funcMap, varAndParamMap);
             System.out.print(value);
+        } else if (this.printValue == null) {
+            System.out.println();
         }
     }
 

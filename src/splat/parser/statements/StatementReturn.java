@@ -2,6 +2,7 @@ package splat.parser.statements;
 
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
+import splat.executor.values.ValueVoid;
 import splat.lexer.Token;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
@@ -24,6 +25,7 @@ public class StatementReturn extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-        System.out.println("execute return");
+        //System.out.println("execute return");
+        throw new ReturnFromCall(new ValueVoid());
     }
 }
