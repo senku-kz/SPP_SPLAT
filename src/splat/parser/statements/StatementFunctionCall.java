@@ -66,17 +66,8 @@ public class StatementFunctionCall extends Statement {
 
         for (int i=0; i<this.arguments.size(); i++){
             String prmName = functionParameters.get(i).getLabel();
-            Value argValue = null;
             ASTElement n = this.arguments.get(i);
-
-            if (n instanceof VariableNode){
-                String argName = ((VariableNode) n).getValue();
-                argValue = varAndParamMap.get(argName);
-
-            } else if (n instanceof NumberNode) {
-                argValue = new ValueInteger(((NumberNode)n).getIntegerValue());
-
-            }
+            Value argValue = this.getNodeValue(n, funcMap, varAndParamMap);
 
             functionVarAndParamMap.put(prmName, argValue);
         }

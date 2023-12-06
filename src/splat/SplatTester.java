@@ -59,7 +59,7 @@ public class  SplatTester {
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("bt_02_badsemantics.splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("my_1a_badsemantics.splat"));
 		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("_goodexecution.splat"));
-//		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("999_01_goodexecution.splat"));
+//		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("AAA_01_goodexecution.splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("bt_01_goodexecution.splat"));
 //		File[] testFiles = testDir.listFiles((dir, name) -> name.endsWith("gk_01a_goodexecution.splat"));
 
