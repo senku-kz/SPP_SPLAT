@@ -49,7 +49,7 @@ public class UnaryExpression extends Expression {
 
     @Override
     public Value evaluate(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) {
-        Value value = this.getValue(this.node, funcMap, varAndParamMap);
+        Value value = this.getNodeValue(this.node, funcMap, varAndParamMap);
         Value valueResult = null;
 
         if (ArithmeticOperators.UnaryMinus.equals(this.operator)){

@@ -2,20 +2,12 @@ package splat.parser.statements;
 
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
-import splat.executor.values.ValueBoolean;
-import splat.executor.values.ValueInteger;
-import splat.executor.values.ValueString;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
-import splat.parser.expressions.BinaryExpression;
-import splat.parser.expressions.UnaryExpression;
-import splat.parser.nodes.BooleanNode;
 import splat.parser.nodes.LabelNode;
-import splat.parser.nodes.NumberNode;
-import splat.parser.nodes.StringNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
@@ -42,7 +34,7 @@ public class StatementExpression extends Statement {
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
         String labelLeft = ((LabelNode) this.node_left).getLabel();
-        Value rightValue = this.getValue(this.node_right, funcMap, varAndParamMap);
+        Value rightValue = this.getNodeValue(this.node_right, funcMap, varAndParamMap);
 
         varAndParamMap.put(labelLeft, rightValue);
     }

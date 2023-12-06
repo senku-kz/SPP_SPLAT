@@ -88,7 +88,7 @@ public abstract class ASTElement {
 		return nodeType;
 	}
 
-	public Value getValue(ASTElement node, Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap){
+	public Value getNodeValue(ASTElement node, Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap){
 		Value nodeValue = null;
 
 		if (node instanceof BinaryExpression){

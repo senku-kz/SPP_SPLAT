@@ -8,9 +8,6 @@ import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
-import splat.parser.expressions.BinaryExpression;
-import splat.parser.expressions.UnaryExpression;
-import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.ArrayList;
@@ -43,7 +40,7 @@ public class StatementIfElse extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-        Value value = this.getValue(this.expression, funcMap, varAndParamMap);
+        Value value = this.getNodeValue(this.expression, funcMap, varAndParamMap);
 
         if (((ValueBoolean)value).getValue()){
             for (Statement stmt: this.thanStatement) {

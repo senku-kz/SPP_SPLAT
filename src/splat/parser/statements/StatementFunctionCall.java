@@ -1,11 +1,15 @@
 package splat.parser.statements;
 
+import org.w3c.dom.Node;
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
+import splat.executor.values.ValueBoolean;
+import splat.executor.values.ValueInteger;
 import splat.lexer.Token;
 import splat.parser.elements.*;
 import splat.parser.expressions.BinaryExpression;
 import splat.parser.nodes.LabelNode;
+import splat.parser.nodes.NumberNode;
 import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
@@ -56,15 +60,24 @@ public class StatementFunctionCall extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-//        System.out.println("Execute function");
         String functionName = ((LabelNode)this.functionName).getLabel();
         List<Declaration> functionParameters = funcMap.get(functionName).getParameters();
         Map<String, Value> functionVarAndParamMap = new HashMap<>();
 
         for (int i=0; i<this.arguments.size(); i++){
             String prmName = functionParameters.get(i).getLabel();
-            String argName = ((VariableNode) this.arguments.get(i)).getValue();
-            Value argValue = varAndParamMap.get(argName);
+            Value argValue = null;
+            ASTElement n = this.arguments.get(i);
+
+            if (n instanceof VariableNode){
+                String argName = ((VariableNode) n).getValue();
+                argValue = varAndParamMap.get(argName);
+
+            } else if (n instanceof NumberNode) {
+                argValue = new ValueInteger(((NumberNode)n).getIntegerValue());
+
+            }
+
             functionVarAndParamMap.put(prmName, argValue);
         }
 

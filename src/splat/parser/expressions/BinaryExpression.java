@@ -57,8 +57,8 @@ public class BinaryExpression extends Expression {
 
     @Override
     public Value evaluate(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) {
-        Value valueLeft = this.getValue(this.node_left, funcMap, varAndParamMap);
-        Value valueRight = this.getValue(this.node_right, funcMap, varAndParamMap);
+        Value valueLeft = this.getNodeValue(this.node_left, funcMap, varAndParamMap);
+        Value valueRight = this.getNodeValue(this.node_right, funcMap, varAndParamMap);
         Value valueResult = null;
 
         if (ArithmeticOperators.Addition.equals(this.operator)){
