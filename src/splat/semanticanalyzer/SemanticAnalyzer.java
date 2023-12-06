@@ -59,18 +59,6 @@ public class SemanticAnalyzer {
 
 		// Perform semantic analysis on the function body
 		for (Statement stmt : funcDecl.getStmts()) {
-//			if (stmt instanceof StatementReturn){
-//				if (!TokenType.Void.equals(functionDeclType)){
-//					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
-//				}
-//			} else if (stmt instanceof StatementReturnValue) {
-//				StatementReturnValue statementReturnValue = (StatementReturnValue) stmt;
-//				statementReturnValue.analyze(funcMap, varAndParamMap);
-//				returnValueType = statementReturnValue.getReturnedNodeType();
-//				if(!returnValueType.equals(functionDeclType)){
-//					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
-//				}
-//			}
 			stmt.setMainBody(false);
 
 			if (TokenType.Void.equals(functionDeclType)){
@@ -86,11 +74,6 @@ public class SemanticAnalyzer {
 		if(returnValueType != functionDeclType){
 			throw new SemanticAnalysisException("Error in returning the type of the declared function.", funcDecl);
 		}
-
-
-//		if (!functionDeclType.equals(returnValueType)){
-//			throw new SemanticAnalysisException("Error in returning the type of the declared function.", funcDecl.getLine(),funcDecl.getColumn());
-//		}
 
 	}
 	
