@@ -70,6 +70,10 @@ public class StatementPrint extends Statement {
             System.out.print(value);
         } else if (this.printValue == null) {
             System.out.println();
+        } else if (this.printValue instanceof StatementFunctionCall) {
+            ((StatementFunctionCall)this.printValue).execute(funcMap, varAndParamMap);
+            Value value = ((StatementFunctionCall) this.printValue).returnValue;
+            System.out.print(value);
         }
     }
 

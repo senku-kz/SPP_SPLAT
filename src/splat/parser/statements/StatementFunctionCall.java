@@ -16,7 +16,10 @@ import java.util.Map;
 
 public class StatementFunctionCall extends Statement {
     ASTElement functionName;
+
     List<ASTElement> arguments;
+
+    Value returnValue;
 
     public StatementFunctionCall(Token tok) {
         super(tok);
@@ -74,6 +77,7 @@ public class StatementFunctionCall extends Statement {
 
         } catch (ReturnFromCall ex) {
             // System.out.println(" Function Reterned");
+            this.returnValue = ex.getReturnVal();
         }
     }
 
@@ -95,5 +99,9 @@ public class StatementFunctionCall extends Statement {
 
     public void addArgument(ASTElement argument) {
         this.arguments.add(argument);
+    }
+
+    public Value getReturnValue() {
+        return returnValue;
     }
 }

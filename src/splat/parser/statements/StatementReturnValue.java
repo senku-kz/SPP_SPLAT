@@ -2,11 +2,15 @@ package splat.parser.statements;
 
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
+import splat.executor.values.ValueVoid;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
+import splat.parser.expressions.BinaryExpression;
+import splat.parser.expressions.UnaryExpression;
+import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
@@ -43,6 +47,18 @@ public class StatementReturnValue extends Statement {
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
 //        System.out.println("execute return value");
+        Value returnValue = null;
+
+        if (this.value instanceof BinaryExpression){
+            returnValue = ((BinaryExpression) this.value).evaluate(funcMap, varAndParamMap);
+        } else if (this.value instanceof UnaryExpression){
+            returnValue = ((UnaryExpression)this.value).evaluate(funcMap, varAndParamMap);
+        } else if (this.value instanceof VariableNode) {
+            String st = ((VariableNode)this.value).getValue();
+            returnValue = varAndParamMap.get(st);
+        }
+
+        throw new ReturnFromCall(returnValue);
     }
 
     public TokenType getReturnedNodeType() {
