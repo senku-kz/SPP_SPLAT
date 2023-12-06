@@ -10,6 +10,7 @@ import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
 import splat.parser.expressions.BinaryExpression;
 import splat.parser.expressions.UnaryExpression;
+import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.ArrayList;
@@ -49,6 +50,9 @@ public class StatementIfElse extends Statement {
             value = ((BinaryExpression) this.expression).evaluate(funcMap, varAndParamMap);
         } else if (this.expression instanceof UnaryExpression){
             value = ((UnaryExpression)this.expression).evaluate(funcMap, varAndParamMap);
+        } else if (this.expression instanceof VariableNode) {
+            String st = ((VariableNode)this.expression).getValue();
+            value = varAndParamMap.get(st);
         }
 
         if (((ValueBoolean)value).getValue()){

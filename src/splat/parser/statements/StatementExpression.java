@@ -11,6 +11,7 @@ import splat.parser.elements.FunctionDecl;
 import splat.parser.elements.Statement;
 import splat.parser.elements.TokenType;
 import splat.parser.expressions.BinaryExpression;
+import splat.parser.expressions.UnaryExpression;
 import splat.parser.nodes.BooleanNode;
 import splat.parser.nodes.LabelNode;
 import splat.parser.nodes.NumberNode;
@@ -53,6 +54,8 @@ public class StatementExpression extends Statement {
                 rightValue = new ValueBoolean(((BooleanNode)this.node_right).isValue());
             } else if (this.node_right instanceof BinaryExpression) {
                 rightValue = ((BinaryExpression)this.node_right).evaluate(funcMap, varAndParamMap);
+            } else if (this.node_right instanceof UnaryExpression) {
+                rightValue = ((UnaryExpression) this.node_right).evaluate(funcMap,varAndParamMap);
             }
 
             varAndParamMap.put(labelLeft, rightValue);
