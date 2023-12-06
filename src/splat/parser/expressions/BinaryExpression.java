@@ -3,6 +3,7 @@ package splat.parser.expressions;
 import splat.executor.Value;
 import splat.executor.values.ValueBoolean;
 import splat.executor.values.ValueInteger;
+import splat.executor.values.ValueString;
 import splat.lexer.Token;
 import splat.parser.elements.ASTElement;
 import splat.parser.elements.Expression;
@@ -101,13 +102,30 @@ public class BinaryExpression extends Expression {
                 valueResult = new ValueBoolean(false);
             }
         } else if (ArithmeticOperators.EqualTo.equals(this.operator)) {
-            if (((ValueInteger) valueLeft).getValue() == ((ValueInteger) valueRight).getValue()) {
-                valueResult = new ValueBoolean(true);
-            } else {
-                valueResult = new ValueBoolean(false);
+            if (valueLeft instanceof ValueBoolean){
+                if (((ValueBoolean) valueLeft).getValue() && ((ValueBoolean)valueRight).getValue()) {
+                    valueResult = new ValueBoolean(true);
+                } else {
+                    valueResult = new ValueBoolean(false);
+                }
+
+            } else if (valueLeft instanceof ValueInteger) {
+                if (((ValueInteger) valueLeft).getValue() == ((ValueInteger)valueRight).getValue()) {
+                    valueResult = new ValueBoolean(true);
+                } else {
+                    valueResult = new ValueBoolean(false);
+                }
+
+            } else if (valueLeft instanceof ValueString) {
+                if (((ValueString) valueLeft).getValue().equals(((ValueString)valueRight).getValue())) {
+                    valueResult = new ValueBoolean(true);
+                } else {
+                    valueResult = new ValueBoolean(false);
+                }
+
             }
         } else if (ArithmeticOperators.NotEqualTo.equals(this.operator)) {
-            if (((ValueInteger) valueLeft).getValue() != ((ValueInteger) valueRight).getValue()) {
+            if (valueLeft != valueRight) {
                 valueResult = new ValueBoolean(true);
             } else {
                 valueResult = new ValueBoolean(false);
