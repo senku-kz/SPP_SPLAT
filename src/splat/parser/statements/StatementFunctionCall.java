@@ -1,6 +1,7 @@
 package splat.parser.statements;
 
 import org.w3c.dom.Node;
+import splat.executor.ExecutionException;
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
 import splat.executor.values.ValueBoolean;
@@ -59,7 +60,7 @@ public class StatementFunctionCall extends Statement {
     }
 
     @Override
-    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap){
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ExecutionException {
         String functionName = ((LabelNode)this.functionName).getLabel();
         List<Declaration> functionParameters = funcMap.get(functionName).getParameters();
         Map<String, Value> functionVarAndParamMap = new HashMap<>();
@@ -78,9 +79,7 @@ public class StatementFunctionCall extends Statement {
             for (Statement stmt : funcMap.get(((LabelNode)this.functionName).getLabel()).getStmts()){
                 stmt.execute(funcMap, functionVarAndParamMap);
             }
-
         } catch (ReturnFromCall ex) {
-            // System.out.println(" Function Reterned");
             this.returnValue = ex.getReturnVal();
         }
     }

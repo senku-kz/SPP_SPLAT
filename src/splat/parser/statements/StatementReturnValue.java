@@ -1,5 +1,6 @@
 package splat.parser.statements;
 
+import splat.executor.ExecutionException;
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
 import splat.lexer.Token;
@@ -29,6 +30,7 @@ public class StatementReturnValue extends Statement {
     public void analyze(Map<String, FunctionDecl> funcMap, Map<String, TokenType> varAndParamMap) throws SemanticAnalysisException {
         TokenType nodeType = this.getType(this.value, funcMap, varAndParamMap);
         this.returnedNodeType = nodeType;
+        this.setReturnedTypeStatic(nodeType);
 
         Map.Entry<String, FunctionDecl> firstEntry = funcMap.entrySet().iterator().next();
         String functionName = firstEntry.getKey();
@@ -41,7 +43,7 @@ public class StatementReturnValue extends Statement {
     }
 
     @Override
-    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall, ExecutionException {
         Value returnValue = this.getNodeValue(this.value, funcMap, varAndParamMap);
         throw new ReturnFromCall(returnValue);
     }

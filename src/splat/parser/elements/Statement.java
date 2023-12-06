@@ -1,17 +1,18 @@
 package splat.parser.elements;
 
+import splat.executor.ExecutionException;
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
 import splat.lexer.Token;
-import splat.parser.expressions.BinaryExpression;
-import splat.parser.expressions.UnaryExpression;
-import splat.parser.nodes.VariableNode;
 import splat.semanticanalyzer.SemanticAnalysisException;
 
 import java.util.Map;
 
 public abstract class Statement extends ASTElement {
 	protected static Boolean isMainBody = false;
+
+	protected static TokenType returnedTypeStatic = null;
+
 	public Statement(Token token) {
 		super(token);
 	}
@@ -39,7 +40,7 @@ public abstract class Statement extends ASTElement {
 	 */
 	 public abstract void execute(Map<String, FunctionDecl> funcMap,
 	                              Map<String, Value> varAndParamMap)
-										throws ReturnFromCall;
+			 throws ReturnFromCall, ExecutionException;
 
 	public Boolean getMainBody() {
 		return isMainBody;
@@ -49,4 +50,11 @@ public abstract class Statement extends ASTElement {
 		isMainBody = mainBody;
 	}
 
+	public void setReturnedTypeStatic(TokenType returnedTypeStatic) {
+		Statement.returnedTypeStatic = returnedTypeStatic;
+	}
+
+	public TokenType getReturnedTypeStatic() {
+		return returnedTypeStatic;
+	}
 }

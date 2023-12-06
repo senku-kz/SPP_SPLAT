@@ -1,5 +1,6 @@
 package splat.parser.expressions;
 
+import splat.executor.ExecutionException;
 import splat.executor.Value;
 import splat.executor.values.ValueBoolean;
 import splat.executor.values.ValueInteger;
@@ -56,7 +57,7 @@ public class BinaryExpression extends Expression {
     }
 
     @Override
-    public Value evaluate(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) {
+    public Value evaluate(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ExecutionException {
         Value valueLeft = this.getNodeValue(this.node_left, funcMap, varAndParamMap);
         Value valueRight = this.getNodeValue(this.node_right, funcMap, varAndParamMap);
         Value valueResult = null;
@@ -71,8 +72,13 @@ public class BinaryExpression extends Expression {
             Integer t = ((ValueInteger)valueLeft).getValue() * ((ValueInteger)valueRight).getValue();
             valueResult = new ValueInteger(t);
         } else if (ArithmeticOperators.Division.equals(this.operator)) {
-            Integer t = ((ValueInteger)valueLeft).getValue() / ((ValueInteger)valueRight).getValue();
-            valueResult = new ValueInteger(t);
+            try {
+                Integer t = ((ValueInteger)valueLeft).getValue() / ((ValueInteger)valueRight).getValue();
+                valueResult = new ValueInteger(t);
+            } catch (ArithmeticException e){
+                throw new ExecutionException("ArithmeticException - Can't be divided by Zero", this.node_left);
+            }
+
         } else if (ArithmeticOperators.Modulus.equals(this.operator)) {
             Integer t = ((ValueInteger)valueLeft).getValue() % ((ValueInteger)valueRight).getValue();
             valueResult = new ValueInteger(t);

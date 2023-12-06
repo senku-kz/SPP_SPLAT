@@ -1,5 +1,6 @@
 package splat.parser.elements;
 
+import splat.executor.ExecutionException;
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
 import splat.executor.values.ValueBoolean;
@@ -89,7 +90,7 @@ public abstract class ASTElement {
 		return nodeType;
 	}
 
-	public Value getNodeValue(ASTElement node, Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap){
+	public Value getNodeValue(ASTElement node, Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ExecutionException {
 		Value nodeValue = null;
 
 		if (node instanceof BinaryExpression){

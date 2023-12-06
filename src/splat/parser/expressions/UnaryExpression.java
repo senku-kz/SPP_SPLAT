@@ -1,5 +1,6 @@
 package splat.parser.expressions;
 
+import splat.executor.ExecutionException;
 import splat.executor.Value;
 import splat.executor.values.ValueBoolean;
 import splat.executor.values.ValueInteger;
@@ -48,7 +49,7 @@ public class UnaryExpression extends Expression {
     }
 
     @Override
-    public Value evaluate(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) {
+    public Value evaluate(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ExecutionException {
         Value value = this.getNodeValue(this.node, funcMap, varAndParamMap);
         Value valueResult = null;
 

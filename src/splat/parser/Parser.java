@@ -305,11 +305,9 @@ public class Parser {
 		} else if (this.peekNext("if")) {
 			StatementIfElse statementIfElse = new StatementIfElse(this.currentToken);
 			this.eat();
-//			this.checkNext("(");
 
 			ASTElement statementExpression = this.expression();
 			statementIfElse.setExpression(statementExpression);
-//			this.checkNext(")");
 
 			this.checkNext("then");
 
@@ -445,7 +443,6 @@ public class Parser {
 			return new PlusNode(this.factor());
 		} else if ("-".equals(this.currentToken.getValue())) {
 			this.checkNext("-");
-//			return new MinusNode(this.factor());
 			return new UnaryExpression(ArithmeticOperators.UnaryMinus, this.factor());
 		} else if ("STRING".equals(this.currentToken.getType())) {
 			this.eat();

@@ -55,28 +55,42 @@ public class SemanticAnalyzer {
 		Map<String, TokenType> varAndParamMap = getVarAndParamMap(funcDecl);
 
 		TokenType functionDeclType = funcDecl.getType();
-		TokenType returnValueType = TokenType.Void;
+		TokenType returnValueType = null;
+
 		// Perform semantic analysis on the function body
 		for (Statement stmt : funcDecl.getStmts()) {
-			if (stmt instanceof StatementReturn){
-				if (!TokenType.Void.equals(functionDeclType)){
-					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
-				}
-			} else if (stmt instanceof StatementReturnValue) {
-				StatementReturnValue statementReturnValue = (StatementReturnValue) stmt;
-				statementReturnValue.analyze(funcMap, varAndParamMap);
-				returnValueType = statementReturnValue.getReturnedNodeType();
-				if(!returnValueType.equals(functionDeclType)){
-					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
-				}
-			}
+//			if (stmt instanceof StatementReturn){
+//				if (!TokenType.Void.equals(functionDeclType)){
+//					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
+//				}
+//			} else if (stmt instanceof StatementReturnValue) {
+//				StatementReturnValue statementReturnValue = (StatementReturnValue) stmt;
+//				statementReturnValue.analyze(funcMap, varAndParamMap);
+//				returnValueType = statementReturnValue.getReturnedNodeType();
+//				if(!returnValueType.equals(functionDeclType)){
+//					throw new SemanticAnalysisException("Error in returning the type of the declared function.", stmt);
+//				}
+//			}
 			stmt.setMainBody(false);
+
+			if (TokenType.Void.equals(functionDeclType)){
+				stmt.setReturnedTypeStatic(TokenType.Void);
+			} else {
+				stmt.setReturnedTypeStatic(null);
+			}
+
 			stmt.analyze(funcMap, varAndParamMap);
+			returnValueType = stmt.getReturnedTypeStatic();
+
+		}
+		if(returnValueType != functionDeclType){
+			throw new SemanticAnalysisException("Error in returning the type of the declared function.", funcDecl);
 		}
 
-		if (!functionDeclType.equals(returnValueType)){
-			throw new SemanticAnalysisException("Error in returning the type of the declared function.", funcDecl.getLine(),funcDecl.getColumn());
-		}
+
+//		if (!functionDeclType.equals(returnValueType)){
+//			throw new SemanticAnalysisException("Error in returning the type of the declared function.", funcDecl.getLine(),funcDecl.getColumn());
+//		}
 
 	}
 	

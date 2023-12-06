@@ -1,5 +1,6 @@
 package splat.parser.statements;
 
+import splat.executor.ExecutionException;
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
 import splat.executor.values.ValueBoolean;
@@ -34,7 +35,7 @@ public class StatementWhile extends Statement {
     }
 
     @Override
-    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall, ExecutionException {
         Value value = this.getNodeValue(this.expression, funcMap, varAndParamMap);
 
         if (((ValueBoolean)value).getValue()){

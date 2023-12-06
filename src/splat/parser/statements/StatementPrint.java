@@ -1,5 +1,6 @@
 package splat.parser.statements;
 
+import splat.executor.ExecutionException;
 import splat.executor.ReturnFromCall;
 import splat.executor.Value;
 import splat.executor.values.ValueBoolean;
@@ -40,13 +41,10 @@ public class StatementPrint extends Statement {
             nodeType = varAndParamMap.get(((VariableNode) this.printValue).getValue());
         }
 
-//        if (!TokenType.String.equals(nodeType)){
-//            throw new SemanticAnalysisException("Print value not a String type", this.printValue);
-//        }
     }
 
     @Override
-    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
+    public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall, ExecutionException {
         if (this.printValue instanceof BooleanNode) {
             System.out.print(((BooleanNode) this.printValue).isValue());
         } else if (this.printValue instanceof NumberNode) {
@@ -69,12 +67,6 @@ public class StatementPrint extends Statement {
             System.out.print(value);
         }
 
-//        if (this.printValue == null){
-//            System.out.println();
-//        } else {
-//            Value v = this.getNodeValue(this.printValue, funcMap, varAndParamMap);
-//            System.out.print(v);
-//        }
     }
 
     public void setPrintValue(ASTElement printValue) {

@@ -1,5 +1,6 @@
 package splat.parser.elements;
 
+import splat.executor.ExecutionException;
 import splat.executor.Value;
 import splat.lexer.Token;
 import splat.semanticanalyzer.SemanticAnalysisException;
@@ -50,6 +51,6 @@ public abstract class Expression extends ASTElement {
 	 * values of the items that are currently in scope
 	 */
 	public abstract Value evaluate(Map<String, FunctionDecl> funcMap,
-								   Map<String, Value> varAndParamMap);
+								   Map<String, Value> varAndParamMap) throws ExecutionException;
 
 }
