@@ -41,25 +41,10 @@ public class StatementExpression extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-//        System.out.println("StatementExpression");
-        if (this.node_left instanceof LabelNode){
-            String labelLeft = ((LabelNode) this.node_left).getLabel();
-            Value rightValue = null;
+        String labelLeft = ((LabelNode) this.node_left).getLabel();
+        Value rightValue = this.getValue(this.node_right, funcMap, varAndParamMap);
 
-            if (this.node_right instanceof NumberNode) {
-                rightValue = new ValueInteger(((NumberNode) this.node_right).getIntegerValue());
-            } else if (this.node_right instanceof StringNode) {
-                rightValue = new ValueString(((StringNode) this.node_right).getStringValue());
-            } else if (this.node_right instanceof BooleanNode) {
-                rightValue = new ValueBoolean(((BooleanNode)this.node_right).isValue());
-            } else if (this.node_right instanceof BinaryExpression) {
-                rightValue = ((BinaryExpression)this.node_right).evaluate(funcMap, varAndParamMap);
-            } else if (this.node_right instanceof UnaryExpression) {
-                rightValue = ((UnaryExpression) this.node_right).evaluate(funcMap,varAndParamMap);
-            }
-
-            varAndParamMap.put(labelLeft, rightValue);
-        }
+        varAndParamMap.put(labelLeft, rightValue);
     }
 
 }
