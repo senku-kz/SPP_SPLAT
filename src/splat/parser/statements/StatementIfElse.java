@@ -43,19 +43,7 @@ public class StatementIfElse extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-        // System.out.println("Execute if-then-else");
-        Value value = null;
-        // TODO:
-//        this.getValue(this.expression, funcMap, varAndParamMap);
-
-        if (this.expression instanceof BinaryExpression){
-            value = ((BinaryExpression) this.expression).evaluate(funcMap, varAndParamMap);
-        } else if (this.expression instanceof UnaryExpression){
-            value = ((UnaryExpression)this.expression).evaluate(funcMap, varAndParamMap);
-        } else if (this.expression instanceof VariableNode) {
-            String st = ((VariableNode)this.expression).getValue();
-            value = varAndParamMap.get(st);
-        }
+        Value value = this.getValue(this.expression, funcMap, varAndParamMap);
 
         if (((ValueBoolean)value).getValue()){
             for (Statement stmt: this.thanStatement) {

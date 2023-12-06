@@ -46,18 +46,7 @@ public class StatementReturnValue extends Statement {
 
     @Override
     public void execute(Map<String, FunctionDecl> funcMap, Map<String, Value> varAndParamMap) throws ReturnFromCall {
-//        System.out.println("execute return value");
-        Value returnValue = null;
-
-        if (this.value instanceof BinaryExpression){
-            returnValue = ((BinaryExpression) this.value).evaluate(funcMap, varAndParamMap);
-        } else if (this.value instanceof UnaryExpression){
-            returnValue = ((UnaryExpression)this.value).evaluate(funcMap, varAndParamMap);
-        } else if (this.value instanceof VariableNode) {
-            String st = ((VariableNode)this.value).getValue();
-            returnValue = varAndParamMap.get(st);
-        }
-
+        Value returnValue = this.getValue(this.value, funcMap, varAndParamMap);
         throw new ReturnFromCall(returnValue);
     }
 
